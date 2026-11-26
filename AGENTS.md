@@ -18,6 +18,7 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 
 ## Regeln
 
+- **Vor jeder Änderung `git pull --rebase`.** Das CMS committet direkt auf `main`, das Repo ändert sich also auch ohne lokale Arbeit.
 - **Texte nicht umschreiben.** Die Inhalte stammen von der alten Seite und gehören der Band. Neue kurze Texte (Überschriften, Hinweise) sind ok, bestehende nur auf Wunsch ändern.
 - **Interne Links immer über `url()`** aus `src/lib/url.ts` bauen, nie hart `/foo/`. Auf GitHub Pages liegt die Seite unter `/mixtape-homepage/`, später unter `/`. In Markdown dürfen Links mit `/` beginnen; `src/lib/satteri-links.mjs` setzt den Basis-Pfad davor.
 - Markdown läuft über **Sätteri** (Astro-7-Standard), nicht remark/rehype. Plugins als Sätteri-HAST/MDAST-Plugins schreiben.
