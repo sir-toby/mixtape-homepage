@@ -141,11 +141,36 @@ const { data } = event;
   .past .no {
     color: var(--ink-soft);
   }
+  .d {
+    font-variant-numeric: tabular-nums;
+  }
   @media (max-width: 640px) {
     a {
-      grid-template-columns: 4.5rem 1fr;
+      grid-template-columns: 4.25rem minmax(0, 1fr);
       gap: 0.25rem 1rem;
       padding-inline: 0.25rem;
+      align-items: start;
+    }
+    /* Phone: day on top, weekday and month below, so nothing runs into the title */
+    .date {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'd' 'wd' 'm';
+      row-gap: 0.15rem;
+    }
+    .d {
+      grid-row: auto;
+      font-size: 2.3rem;
+    }
+    .wd,
+    .m {
+      grid-column: auto;
+      font-size: 0.65rem;
+    }
+    .wd {
+      grid-area: wd;
+    }
+    .m {
+      grid-area: m;
     }
     a:hover {
       padding-inline: 0.5rem;
