@@ -14,10 +14,10 @@
   --line: #16171b24;
   --tape: #4a3426;
 
-  --font-display: 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif;
-  --font-body: 'Outfit Variable', system-ui, sans-serif;
-  --font-mono: 'Space Mono', ui-monospace, monospace;
-  --font-marker: 'Permanent Marker', var(--font-display);
+  --font-display: "Big Shoulders Display Variable", "Arial Narrow", sans-serif;
+  --font-body: "Outfit Variable", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-marker: "Permanent Marker", var(--font-display);
 
   --radius: 18px;
   --radius-sm: 10px;
@@ -30,14 +30,13 @@
 
 /* Background: warm grey with a fine woven texture ("Raster") */
 :root {
-  --pattern: repeating-linear-gradient(0deg, #16171b0d 0 1px, transparent 1px 4px),
-    repeating-linear-gradient(90deg, #16171b0a 0 1px, transparent 1px 4px);
+  --pattern: repeating-linear-gradient(0deg, #16171b08 0 2px, transparent 1px 12px), repeating-linear-gradient(90deg, #16171b08 0 2px, transparent 1px 12px);
   --pattern-size: auto;
   --pattern-pos: 0 0;
 }
 
 /* Test (temporary): the same texture on the cyan and orange blocks, ?flaechen=muster */
-:root[data-flaechen='muster'] .tinted {
+:root[data-flaechen="muster"] .tinted {
   background-image: var(--pattern);
 }
 
@@ -54,7 +53,7 @@
 }
 
 /* First design draft (prototype A): warm cream paper, no texture */
-:root[data-theme='cream'] {
+:root[data-theme="cream"] {
   --pattern: none;
   --paper: #f7f2e8;
   --paper-2: #efe7d7;
@@ -140,7 +139,7 @@ p {
 }
 
 .label::before {
-  content: '';
+  content: "";
   width: 0.7em;
   height: 0.7em;
   border-radius: 50%;
@@ -298,7 +297,7 @@ p {
 }
 
 .grain::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
