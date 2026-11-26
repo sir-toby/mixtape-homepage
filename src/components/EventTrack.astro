@@ -1,0 +1,158 @@
+---
+// One event as a row in a cassette-style tracklist.
+import Icon from './Icon.astro';
+import { url } from '../lib/url';
+import { formatDay, formatMonth, formatWeekday, formatYear, formatTime, type Event } from '../lib/events';
+
+interface Props {
+  event: Event;
+  index: number;
+  past?: boolean;
+}
+const { event, index, past = false } = Astro.props;
+const { data } = event;
+---
+
+<li class:list={['track', { past }]}>
+  <a href={url(`/events/${event.id}/`)}>
+    <span class="no mono">{String(index).padStart(2, '0')}</span>
+    <span class="date">
+      <span class="wd mono">{formatWeekday(data.date)}</span>
+      <span class="d">{formatDay(data.date)}</span>
+      <span class="m mono">{formatMonth(data.date)} {formatYear(data.date)}</span>
+    </span>
+    <span class="body">
+      <span class="title">{data.title}</span>
+      <span class="meta">
+        <span><Icon name="clock" size={15} /> {formatTime(event)}</span>
+        {data.location && <span><Icon name="pin" size={15} /> {data.location}</span>}
+        {data.private && <span class="tag mono">Privat</span>}
+      </span>
+    </span>
+    <span class="go" aria-hidden="true"><Icon name="arrow" size={22} /></span>
+  </a>
+</li>
+
+<style>
+  .track {
+    border-top: 1px solid var(--line);
+  }
+  .track:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  a {
+    display: grid;
+    grid-template-columns: 2.5rem 6.5rem 1fr auto;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.1rem 0.75rem;
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition:
+      background 0.2s,
+      padding 0.2s;
+  }
+  a:hover {
+    background: var(--card);
+    padding-inline: 1.25rem;
+  }
+  .no {
+    color: var(--orange);
+    font-weight: 700;
+  }
+  .date {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.5rem;
+    align-items: baseline;
+    line-height: 1.1;
+  }
+  .d {
+    grid-row: span 2;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.6rem;
+    line-height: 0.9;
+  }
+  .wd,
+  .m {
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+  }
+  .wd {
+    grid-column: 2;
+  }
+  .m {
+    grid-column: 2;
+    white-space: nowrap;
+  }
+  .date {
+    grid-template-areas: 'd wd' 'd m';
+  }
+  .d {
+    grid-area: d;
+  }
+  .title {
+    display: block;
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.25;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1rem;
+    margin-top: 0.3rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .tag {
+    background: var(--paper-2);
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.65rem;
+  }
+  .go {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+    transition:
+      background 0.2s,
+      color 0.2s,
+      transform 0.2s;
+  }
+  a:hover .go {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+    transform: rotate(-45deg);
+  }
+  .past .title {
+    font-weight: 600;
+  }
+  .past .no {
+    color: var(--ink-soft);
+  }
+  @media (max-width: 640px) {
+    a {
+      grid-template-columns: 4.5rem 1fr;
+      gap: 0.25rem 1rem;
+      padding-inline: 0.25rem;
+    }
+    a:hover {
+      padding-inline: 0.5rem;
+    }
+    .no,
+    .go {
+      display: none;
+    }
+  }
+</style>

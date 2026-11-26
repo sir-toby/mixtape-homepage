@@ -1,0 +1,10 @@
+---
+title: "Deutsches Chorfest – Soziales Singen"
+date: 2025-05-29
+start: "15:00"
+end: "15:30"
+location: "Albert Schweitzer Seniorenstift"
+address: "Eichendorffstraße 41, 90491 Nürnberg"
+---
+
+Weitere Infos auf der [Chorfest-Webseite](https://www.chorfest.de/veranstaltung/mixtape-2).

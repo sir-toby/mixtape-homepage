@@ -1,0 +1,332 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import groupCutout from '../assets/brand/group-cutout-wide.png';
+import groupPhoto from '../assets/photos/group-cassette.jpg';
+
+const page = (await getEntry('pages', 'wer-wir-sind'))!;
+const { Content } = await render(page);
+const all = (await getCollection('members')).sort((a, b) => a.data.order - b.data.order);
+const withContent = await Promise.all(all.map(async (m) => ({ m, Content: (await render(m)).Content })));
+const current = withContent.filter(({ m }) => !m.data.former);
+const former = withContent.filter(({ m }) => m.data.former);
+---
+
+<Base title={page.data.title} description={page.data.description}>
+  <PageHero label="Liner Notes" title={page.data.title} tone="orange" />
+
+  <section class="intro-section">
+    <div class="wrap intro-grid">
+      <div class="prose lead" data-reveal><Content /></div>
+      <div class="cutout-wrap" data-reveal>
+        <div class="disc"></div>
+        <Image src={groupCutout} alt="Mixtape: Andreas, Carina, Ellen und Tobias sitzen lachend auf dem Boden" widths={[640, 960, 1491]} sizes="(max-width: 900px) 100vw, 50vw" />
+      </div>
+    </div>
+  </section>
+
+  <section class="members-section">
+    <div class="wrap">
+      <h2 class="sub" data-reveal>Die Stimmen</h2>
+      <div class="members">
+        {
+          current.map(({ m, Content }, i) => (
+            <article class="member" id={m.id} data-reveal>
+              <div class:list={['photo', i % 2 ? 'orange' : 'cyan']}>
+                <Image src={m.data.photo} alt={m.data.photoAlt ?? m.data.name} widths={[400, 700]} sizes="(max-width: 760px) 100vw, 320px" />
+              </div>
+              <div class="text">
+                <span class="side mono">Track {String(i + 1).padStart(2, '0')}</span>
+                <h3>{m.data.name}</h3>
+                <span class="voice mono">{m.data.voice}</span>
+                <div class="prose"><Content /></div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    page.data.lineup && (
+      <section class="lineup-section">
+        <div class="wrap">
+          <h2 class="sub" data-reveal>Besetzung</h2>
+          <ol class="lineup" data-reveal>
+            {page.data.lineup.map((l) => (
+              <li>
+                <span class="period">{l.period}</span>
+                <span class="names">{l.names}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    former.length > 0 && (
+      <section class="former-section">
+        <div class="wrap">
+          <h2 class="sub" data-reveal>Ehemalige Mitglieder</h2>
+          <div class="former">
+            {former.map(({ m, Content }) => (
+              <article class="member small" id={m.id} data-reveal>
+                <div class="photo grey">
+                  <Image src={m.data.photo} alt={m.data.photoAlt ?? m.data.name} widths={[300, 600]} sizes="200px" />
+                </div>
+                <div class="text">
+                  <h3>{m.data.name}</h3>
+                  <div class="prose"><Content /></div>
+                </div>
+              </article>
+            ))}
+          </div>
+          <figure class="old-photo" data-reveal>
+            <Image src={groupPhoto} alt="Mixtape in der Besetzung 2024–2026 schaut staunend auf eine Kassette" widths={[640, 1000, 1600]} sizes="(max-width: 1200px) 100vw, 1100px" />
+            <figcaption class="mono">Besetzung 2024–2026</figcaption>
+          </figure>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="cta-section">
+    <div class="wrap cta">
+      <h2>Live erleben</h2>
+      <a class="btn btn--orange" href={`${import.meta.env.BASE_URL}events/`}>Zu den Terminen <Icon name="arrow" size={18} /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .sub {
+    font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem);
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .intro-section {
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .lead {
+    font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem);
+  }
+  .lead :global(p:last-child) {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    color: var(--orange);
+    line-height: 1;
+    margin-top: 1.5rem;
+  }
+  .cutout-wrap {
+    position: relative;
+  }
+  .disc {
+    position: absolute;
+    width: 72%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--cyan);
+    left: 14%;
+    top: -18%;
+  }
+  .cutout-wrap img {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .members-section {
+    padding-block: clamp(3rem, 7vw, 6rem);
+    background: var(--paper-2);
+  }
+  .members {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+  .member {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    scroll-margin-top: 100px;
+  }
+  .member:nth-child(even) {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+  .member:nth-child(even) .photo {
+    order: 2;
+  }
+  .photo {
+    border-radius: calc(var(--radius) - 6px);
+    overflow: hidden;
+    aspect-ratio: 1;
+    border: 2px solid var(--ink);
+  }
+  .photo.cyan {
+    box-shadow: 6px 6px 0 var(--cyan);
+  }
+  .photo.orange {
+    box-shadow: 6px 6px 0 var(--orange);
+  }
+  .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .side {
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+  h3 {
+    font-size: clamp(2.6rem, 2rem + 2vw, 3.6rem);
+    margin: 0.25rem 0 0.2rem;
+  }
+  .voice {
+    display: inline-block;
+    font-size: 0.75rem;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    margin-bottom: 1.25rem;
+  }
+
+  .lineup-section {
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+  .lineup {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 3px solid var(--ink);
+  }
+  .lineup li {
+    position: relative;
+    padding: 0 0 1.75rem 1.75rem;
+    display: grid;
+    gap: 0.2rem;
+  }
+  .lineup li::before {
+    content: '';
+    position: absolute;
+    left: -11px;
+    top: 0.3rem;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: var(--cyan);
+    border: 3px solid var(--ink);
+  }
+  .lineup li:last-child::before {
+    background: var(--orange);
+  }
+  .period {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .former-section {
+    padding-block: clamp(3rem, 7vw, 6rem);
+    background: var(--paper-2);
+  }
+  .former {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .member.small,
+  .member.small:nth-child(even) {
+    grid-template-columns: 140px minmax(0, 1fr);
+  }
+  .member.small:nth-child(even) .photo {
+    order: 0;
+  }
+  .member.small h3 {
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+  }
+  .member.small .prose {
+    font-size: 0.95rem;
+  }
+  .photo.grey img {
+    filter: grayscale(0.4);
+  }
+  .old-photo {
+    margin: 3rem 0 0;
+  }
+  .old-photo img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    border: 2px solid var(--ink);
+  }
+  .old-photo figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  .cta-section {
+    padding-block: clamp(3rem, 7vw, 5rem);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .cta h2 {
+    font-size: clamp(2.4rem, 1.6rem + 3vw, 4.5rem);
+    color: var(--cyan);
+  }
+
+  @media (max-width: 900px) {
+    .intro-grid,
+    .former {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .cutout-wrap {
+      margin-top: 3rem;
+    }
+  }
+  @media (max-width: 760px) {
+    .member,
+    .member:nth-child(even) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .member:nth-child(even) .photo {
+      order: 0;
+    }
+    .photo {
+      max-width: 320px;
+    }
+    .member.small,
+    .member.small:nth-child(even) {
+      grid-template-columns: 96px minmax(0, 1fr);
+    }
+  }
+</style>

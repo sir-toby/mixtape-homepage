@@ -1,0 +1,33 @@
+---
+// A cassette reel. Spins slowly; pauses for people who prefer reduced motion.
+interface Props {
+  size?: number | string;
+  color?: string;
+  hub?: string;
+  speed?: string;
+  class?: string;
+}
+const { size = 120, color = 'var(--cyan)', hub = 'var(--paper)', speed = '9s', class: className } = Astro.props;
+---
+
+<svg class:list={['reel', className]} viewBox="0 0 100 100" width={size} height={size} aria-hidden="true" style={`--speed:${speed}`}>
+  <circle cx="50" cy="50" r="48" fill={color}></circle>
+  <circle cx="50" cy="50" r="20" fill={hub}></circle>
+  {
+    [0, 60, 120, 180, 240, 300].map((a) => (
+      <rect x="47" y="27" width="6" height="9" rx="1.5" fill={color} transform={`rotate(${a} 50 50)`} />
+    ))
+  }
+  <circle cx="50" cy="50" r="6" fill={color}></circle>
+</svg>
+
+<style>
+  .reel {
+    animation: spin var(--speed) linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

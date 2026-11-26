@@ -1,0 +1,50 @@
+---
+// CleverReach double-opt-in form (same endpoint as on the old WordPress page).
+import settings from '../data/settings.json';
+interface Props {
+  dark?: boolean;
+}
+const { dark = false } = Astro.props;
+---
+
+<form class:list={['nl', { dark }]} method="post" action={settings.newsletterFormAction} target="_blank">
+  <input type="text" tabindex="-1" autocomplete="off" class="visually-hidden" name="email_confirm" aria-hidden="true" />
+  <label for="nl-email" class="visually-hidden">E-Mail</label>
+  <input id="nl-email" type="email" name="email" required placeholder="deine@email.de" autocomplete="email" />
+  <button class="btn" type="submit">Anmelden</button>
+</form>
+
+<style>
+  .nl {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.4rem;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    max-width: 480px;
+  }
+  input[type='email'] {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding: 0 1rem;
+    font: inherit;
+    color: var(--ink);
+  }
+  input[type='email']:focus {
+    outline: none;
+  }
+  .nl:focus-within {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 50%, transparent);
+  }
+  .btn {
+    box-shadow: none;
+  }
+  .btn:hover {
+    box-shadow: none;
+    background: var(--orange);
+    border-color: var(--orange);
+  }
+</style>

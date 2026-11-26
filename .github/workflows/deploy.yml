@@ -1,0 +1,88 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  # Daily rebuild, so past events move from "Termine" to "Bisherige Auftritte" on their own.
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+# Where the site goes is set by the repository variable DEPLOY_TARGET:
+#   (unset) / "github-pages"  → https://sir-toby.github.io/mixtape-homepage/ (preview, noindex)
+#   "all-inkl"                → own domain via FTPS at all-inkl (see README)
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TARGET: ${{ vars.DEPLOY_TARGET || 'github-pages' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: |
+          if [ "$TARGET" = "all-inkl" ]; then
+            export SITE_URL="${{ vars.SITE_URL || 'https://mixtape-vocal.de' }}" BASE_PATH=/
+          else
+            export SITE_URL="https://${{ github.repository_owner }}.github.io" BASE_PATH="/${{ github.event.repository.name }}" PUBLIC_NOINDEX=1
+          fi
+          npm run build
+      - if: env.TARGET != 'all-inkl'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+      - if: env.TARGET == 'all-inkl'
+        uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: dist
+
+  github-pages:
+    if: (vars.DEPLOY_TARGET || 'github-pages') != 'all-inkl'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
+
+  all-inkl:
+    if: vars.DEPLOY_TARGET == 'all-inkl'
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: dist
+      # FTP_DIR must point to a folder that contains nothing but this site:
+      # the mirror deletes every file there that is not part of the build.
+      - name: Upload via FTPS (mirror)
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_DIR: ${{ vars.FTP_DIR }}
+        run: |
+          if [ -z "$FTP_DIR" ] || [ "$FTP_DIR" = "/" ]; then
+            echo "::error::Set the repository variable FTP_DIR to the site's own folder (not /)."; exit 1
+          fi
+          sudo apt-get install -y -qq lftp
+          lftp -u "$FTP_USER","$FTP_PASSWORD" "$FTP_HOST" -e "set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate yes; mirror --reverse --delete --verbose --parallel=4 dist/ $FTP_DIR; quit"

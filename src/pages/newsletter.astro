@@ -1,0 +1,71 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+import Reel from '../components/Reel.astro';
+import Icon from '../components/Icon.astro';
+import settings from '../data/settings.json';
+
+const page = (await getEntry('pages', 'newsletter'))!;
+const { Content } = await render(page);
+---
+
+<Base title={page.data.title} description={page.data.description}>
+  <PageHero label="Bleibt auf Empfang" title={page.data.title} tone="cyan" />
+  <section class="wrap body">
+    <div class="card">
+      <div class="prose lead"><Content /></div>
+      <NewsletterForm />
+      <p class="small">
+        Nach dem Absenden bekommt ihr eine E-Mail zur Bestätigung. Abmelden geht jederzeit über den Link in jedem Newsletter.
+      </p>
+      <p class="insta">
+        Mehr sehen und hören? <a href={settings.instagram} target="_blank" rel="noopener"><Icon name="instagram" size={18} /> Folgt uns auf Instagram</a>
+      </p>
+    </div>
+    <div class="reels" aria-hidden="true">
+      <Reel size={180} color="var(--cyan)" hub="var(--paper)" />
+      <Reel size={180} color="var(--orange)" hub="var(--paper)" speed="7s" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .body {
+    padding-block: clamp(3rem, 7vw, 6rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    gap: 3rem;
+    align-items: center;
+  }
+  .lead {
+    font-size: clamp(1.15rem, 1rem + 0.5vw, 1.4rem);
+    margin-bottom: 2rem;
+  }
+  .small {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-top: 1rem;
+  }
+  .insta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 700;
+    vertical-align: bottom;
+  }
+  .reels {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  @media (max-width: 800px) {
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .reels {
+      display: none;
+    }
+  }
+</style>

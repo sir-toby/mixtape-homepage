@@ -1,0 +1,470 @@
+---
+// Design-Prototyp B: "Bühne" – dunkel, Konzertlicht, Neon-Akzente.
+import '@fontsource-variable/unbounded';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import NewsletterForm from '../../components/NewsletterForm.astro';
+import logo from '../../assets/brand/logo-light.png';
+import groupCutout from '../../assets/brand/group-cutout-wide.png';
+import livePhoto from '../../assets/photos/bardentreffen-2026-stage.jpg';
+import settings from '../../data/settings.json';
+import { getHomeData } from '../../lib/home-data';
+import { formatDay, formatMonth, formatYear, formatWeekday, formatTime } from '../../lib/events';
+import { url } from '../../lib/url';
+
+const { home, newsletter, upcoming, past, members } = await getHomeData();
+const { Content: Welcome } = await render(home);
+const { Content: NewsletterIntro } = await render(newsletter);
+const shown = [...upcoming, ...past.slice(0, Math.max(0, 4 - upcoming.length))];
+---
+
+<Base title="Prototyp B – Bühne" bare noindex>
+  <div class="b">
+    <header class="top">
+      <a href={url('/prototypen/')}><Image src={logo} alt="Mixtape" width={150} densities={[1, 2]} /></a>
+      <nav>
+        <a href="#termine">Termine</a>
+        <a href="#band">Band</a>
+        <a href={`mailto:${settings.email}`} class="pill">Buchen</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="glow g1"></div>
+      <div class="glow g2"></div>
+      <p class="outline" aria-hidden="true">Mixtape</p>
+      <Image src={groupCutout} alt="Mixtape sitzt lachend auf dem Boden" widths={[640, 1000, 1491]} sizes="100vw" class="cutout" loading="eager" />
+      <div class="hero-copy">
+        <h1>{home.data.tagline}</h1>
+        <div class="row">
+          <a href="#termine" class="pill solid">Nächste Termine <Icon name="arrow" size={18} /></a>
+          <a href={settings.instagram} class="pill" target="_blank" rel="noopener"><Icon name="instagram" size={18} /> Instagram</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="termine" class="block">
+      <div class="inner">
+        <h2><span class="num">01</span> Termine</h2>
+        <div class="cards">
+          {
+            shown.map((e) => (
+              <a class:list={['card', { past: past.includes(e) }]} href={url(`/events/${e.id}/`)}>
+                <span class="date">
+                  <span class="d">{formatDay(e.data.date)}</span>
+                  <span class="m">
+                    {formatWeekday(e.data.date)} · {formatMonth(e.data.date)} {formatYear(e.data.date)}
+                  </span>
+                </span>
+                <span class="t">{e.data.title}</span>
+                <span class="meta">
+                  {formatTime(e)}
+                  {e.data.location && ` · ${e.data.location}`}
+                </span>
+                {past.includes(e) && <span class="badge">Rückblick</span>}
+                <Icon name="arrow-up-right" size={22} class="go" />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="block split">
+      <div class="inner two">
+        <div>
+          <h2><span class="num">02</span> {home.data.heading}</h2>
+          <div class="prose"><Welcome /></div>
+        </div>
+        <div class="photo">
+          <Image src={livePhoto} alt="Mixtape singt live auf einer Treppe" widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 50vw" />
+        </div>
+      </div>
+    </section>
+
+    <section id="band" class="block">
+      <div class="inner">
+        <h2><span class="num">03</span> Die Band</h2>
+        <div class="members">
+          {
+            members.map((m) => (
+              <a class="member" href={url(`/wer-wir-sind/#${m.id}`)}>
+                <Image src={m.data.photo} alt={m.data.photoAlt ?? m.data.name} widths={[300, 600]} sizes="(max-width: 700px) 50vw, 25vw" />
+                <span class="cap">
+                  <strong>{m.data.name}</strong>
+                  <small>{m.data.voice}</small>
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="inner">
+        <div class="booking">
+          <h2>{home.data.bookingButton}</h2>
+          <p>{home.data.bookingText}</p>
+          <a class="pill solid" href={`mailto:${settings.email}`}><Icon name="mail" size={18} /> {settings.email}</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="inner two nl">
+        <div class="prose"><NewsletterIntro /></div>
+        <NewsletterForm />
+      </div>
+    </section>
+
+    <footer class="foot">
+      <a href={url('/impressum/')}>Impressum</a>
+      <a href={url('/datenschutzerklaerung/')}>Datenschutz</a>
+      <a href={url('/prototypen/')}>← Alle Prototypen</a>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .b {
+    --bg: #0b1120;
+    --fg: #f3efe6;
+    --muted: #a3acbd;
+    --glass: #ffffff0d;
+    --glass-line: #ffffff1f;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  .b h1,
+  .b h2 {
+    font-family: 'Unbounded Variable', sans-serif;
+    text-transform: none;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .top {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem var(--gutter);
+  }
+  .top nav {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .top nav a {
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.3rem;
+    border-radius: 999px;
+    border: 1px solid var(--glass-line);
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--fg);
+    transition:
+      transform 0.2s,
+      background 0.2s;
+  }
+  .pill:hover {
+    transform: translateY(-2px);
+    background: #ffffff1f;
+  }
+  .pill.solid {
+    background: linear-gradient(135deg, var(--orange), #ff8a3d);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 10px 30px -10px var(--orange);
+  }
+
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    place-items: end center;
+    padding: 6rem var(--gutter) 3rem;
+    text-align: center;
+  }
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.55;
+  }
+  .g1 {
+    width: 55vw;
+    height: 55vw;
+    background: var(--cyan);
+    left: -10vw;
+    top: 5vh;
+    animation: float 12s ease-in-out infinite alternate;
+  }
+  .g2 {
+    width: 45vw;
+    height: 45vw;
+    background: var(--orange);
+    right: -8vw;
+    top: 20vh;
+    animation: float 10s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes float {
+    to {
+      transform: translate(4vw, -3vh) scale(1.08);
+    }
+  }
+  .outline {
+    position: absolute;
+    top: 12vh;
+    left: 0;
+    right: 0;
+    margin: 0;
+    font-family: 'Unbounded Variable', sans-serif;
+    font-weight: 900;
+    font-size: 19vw;
+    line-height: 1;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 2px #ffffff40;
+    letter-spacing: -0.04em;
+    user-select: none;
+  }
+  .cutout {
+    position: relative;
+    width: min(1100px, 100%);
+    height: auto;
+    filter: drop-shadow(0 30px 40px #000a);
+  }
+  .hero-copy {
+    position: relative;
+    margin-top: -2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 1rem + 4vw, 4.2rem);
+    max-width: 16ch;
+    margin: 0 auto 1.75rem;
+  }
+  .row {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .block {
+    padding-block: clamp(4rem, 8vw, 7rem);
+    position: relative;
+  }
+  .inner {
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .block h2 {
+    font-size: clamp(2rem, 1.2rem + 3vw, 3.6rem);
+    margin-bottom: 2.5rem;
+  }
+  .num {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--cyan);
+    vertical-align: super;
+    margin-right: 0.5rem;
+    letter-spacing: 0;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    min-height: 260px;
+    border-radius: 24px;
+    background: var(--glass);
+    border: 1px solid var(--glass-line);
+    text-decoration: none;
+    transition:
+      transform 0.25s,
+      border-color 0.25s,
+      background 0.25s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--cyan);
+    background: #19bfd114;
+  }
+  .card.past {
+    opacity: 0.6;
+  }
+  .date .d {
+    display: block;
+    font-family: 'Unbounded Variable', sans-serif;
+    font-weight: 800;
+    font-size: 3.4rem;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--cyan), var(--orange));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .date .m {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .t {
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1.25;
+    margin-top: auto;
+  }
+  .meta {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .badge {
+    position: absolute;
+    top: 1.25rem;
+    right: 3.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--glass-line);
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+  }
+  .card :global(.go) {
+    position: absolute;
+    top: 1.4rem;
+    right: 1.4rem;
+    color: var(--cyan);
+  }
+  .two {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .b .prose {
+    color: var(--muted);
+  }
+  .b .prose :global(a) {
+    color: var(--cyan);
+  }
+  .photo img {
+    border-radius: 28px;
+    width: 100%;
+    height: auto;
+    box-shadow: 0 30px 60px -20px #19bfd166;
+  }
+  .members {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .member {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    text-decoration: none;
+  }
+  .member img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.1);
+    transition:
+      filter 0.4s,
+      transform 0.6s;
+  }
+  .member:hover img {
+    filter: none;
+    transform: scale(1.05);
+  }
+  .cap {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 2.5rem 1.25rem 1.25rem;
+    background: linear-gradient(transparent, #0b1120ee);
+    display: grid;
+  }
+  .cap strong {
+    font-family: 'Unbounded Variable', sans-serif;
+    font-size: 1.4rem;
+  }
+  .cap small {
+    color: var(--cyan);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+  }
+  .booking {
+    padding: clamp(2rem, 5vw, 4rem);
+    border-radius: 32px;
+    background:
+      linear-gradient(var(--bg), var(--bg)) padding-box,
+      linear-gradient(135deg, var(--cyan), var(--orange)) border-box;
+    border: 2px solid transparent;
+    text-align: center;
+  }
+  .booking p {
+    max-width: 60ch;
+    margin: 0 auto 2rem;
+    color: var(--muted);
+    font-size: 1.15rem;
+  }
+  .nl :global(.nl) {
+    background: var(--glass);
+    border-color: var(--glass-line);
+  }
+  .nl :global(input[type='email']) {
+    color: var(--fg);
+  }
+  .foot {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    padding: 2rem;
+    border-top: 1px solid var(--glass-line);
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  @media (max-width: 800px) {
+    .two {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .members {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .top nav a:not(.pill) {
+      display: none;
+    }
+    .hero {
+      min-height: auto;
+      padding-top: 8rem;
+    }
+  }
+</style>

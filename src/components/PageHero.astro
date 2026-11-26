@@ -1,0 +1,48 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  intro?: string;
+  tone?: 'cyan' | 'orange' | 'paper';
+}
+const { label, title, intro, tone = 'paper' } = Astro.props;
+---
+
+<section class:list={['page-hero grain', tone]}>
+  <div class="wrap">
+    <span class="label">{label}</span>
+    <h1>{title}</h1>
+    {intro && <p class="intro">{intro}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding-block: clamp(3rem, 7vw, 6rem) clamp(2rem, 5vw, 4rem);
+    border-bottom: 2px solid var(--ink);
+  }
+  .cyan {
+    background: var(--cyan);
+  }
+  .orange {
+    background: var(--orange);
+  }
+  .orange .label::before {
+    background: var(--ink);
+  }
+  .cyan .label::before {
+    background: var(--orange);
+  }
+  h1 {
+    font-size: clamp(3.5rem, 1.5rem + 8vw, 9rem);
+    margin-top: 1.25rem;
+    padding-top: 0.08em;
+    overflow-wrap: anywhere;
+  }
+  .intro {
+    font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+    max-width: 48ch;
+    margin: 1.25rem 0 0;
+  }
+</style>

@@ -1,0 +1,424 @@
+---
+// Design-Prototyp C: "Editorial" – hell, ruhig, große Fotos, Serifenschrift.
+import '@fontsource-variable/fraunces/full.css';
+import '@fontsource-variable/fraunces/full-italic.css';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import NewsletterForm from '../../components/NewsletterForm.astro';
+import logo from '../../assets/brand/logo.png';
+import livePhoto from '../../assets/photos/bardentreffen-2026-stage.jpg';
+import groupCutout from '../../assets/brand/group-cutout-wide.png';
+import settings from '../../data/settings.json';
+import { getHomeData } from '../../lib/home-data';
+import { formatDay, formatMonth, formatYear, formatWeekdayLong, formatTime } from '../../lib/events';
+import { url } from '../../lib/url';
+
+const { home, newsletter, upcoming, past, members } = await getHomeData();
+const { Content: Welcome } = await render(home);
+const { Content: NewsletterIntro } = await render(newsletter);
+const shown = upcoming.length ? upcoming : past.slice(0, 3);
+---
+
+<Base title="Prototyp C – Editorial" bare noindex>
+  <div class="c">
+    <header class="top">
+      <a href={url('/prototypen/')}><Image src={logo} alt="Mixtape" width={150} densities={[1, 2]} /></a>
+      <nav>
+        <a href="#termine">Termine</a>
+        <a href="#band">Über uns</a>
+        <a href={url('/newsletter/')}>Newsletter</a>
+        <a href={`mailto:${settings.email}`} class="cta">Anfragen</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <Image src={livePhoto} alt="Mixtape singt live auf einer Treppe in Nürnberg" widths={[800, 1400, 2000]} sizes="100vw" loading="eager" class="bg" />
+      <div class="hero-card">
+        <p class="kicker">A cappella · Pop · Jazz · Rock · Singer/Songwriter</p>
+        <h1>
+          A-cappella-Musik,<br /><em>die Spaß macht!</em>
+        </h1>
+      </div>
+    </section>
+
+    <section class="intro">
+      <div class="inner intro-grid">
+        <blockquote>„echt, nahbar, berührend und mitreißend.“</blockquote>
+        <div>
+          <h2 class="small-h">{home.data.heading}</h2>
+          <div class="prose"><Welcome /></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="termine" class="events">
+      <div class="inner">
+        <div class="head">
+          <h2>Termine</h2>
+          <a href={url('/events/')} class="link">Alle Termine <Icon name="arrow" size={18} /></a>
+        </div>
+        <ul class="list">
+          {
+            shown.map((e) => (
+              <li>
+                <a href={url(`/events/${e.id}/`)}>
+                  <span class="d">
+                    <span class="day">{formatDay(e.data.date)}</span>
+                    <span class="mon">
+                      {formatMonth(e.data.date)} {formatYear(e.data.date)}
+                    </span>
+                  </span>
+                  <span class="what">
+                    <span class="t">{e.data.title}</span>
+                    <span class="meta">
+                      {formatWeekdayLong(e.data.date)} · {formatTime(e)}
+                      {e.data.location && ` · ${e.data.location}`}
+                    </span>
+                  </span>
+                  {e.data.image && <Image src={e.data.image} alt="" width={120} height={120} class="thumb" />}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section id="band" class="band">
+      <div class="inner">
+        <h2>Die Band</h2>
+        <div class="members">
+          {
+            members.map((m) => (
+              <a href={url(`/wer-wir-sind/#${m.id}`)} class="member">
+                <Image src={m.data.photo} alt={m.data.photoAlt ?? m.data.name} widths={[300, 600]} sizes="(max-width: 700px) 50vw, 25vw" />
+                <span class="name">{m.data.name}</span>
+                <span class="voice">{m.data.voice}</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="booking">
+      <div class="inner booking-grid">
+        <Image src={groupCutout} alt="" widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 50vw" class="cut" />
+        <div>
+          <h2>Mixtape für euren Anlass</h2>
+          <p>{home.data.bookingText}</p>
+          <a class="cta big" href={`mailto:${settings.email}`}>{home.data.bookingButton}</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="news">
+      <div class="inner news-grid">
+        <h2>Newsletter</h2>
+        <div>
+          <div class="prose"><NewsletterIntro /></div>
+          <NewsletterForm />
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot inner">
+      <span>© Mixtape Vocal GbR</span>
+      <span>
+        <a href={url('/impressum/')}>Impressum</a> · <a href={url('/datenschutzerklaerung/')}>Datenschutz</a> ·
+        <a href={url('/prototypen/')}>Alle Prototypen</a>
+      </span>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .c {
+    --serif: 'Fraunces Variable', Georgia, serif;
+    background: #fff;
+    color: #1b1b1b;
+  }
+  .c h1,
+  .c h2 {
+    font-family: var(--serif);
+    text-transform: none;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    font-variation-settings: 'SOFT' 50;
+  }
+  .c em {
+    font-style: italic;
+    color: var(--orange);
+  }
+  .inner {
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem var(--gutter);
+    max-width: 1400px;
+    margin-inline: auto;
+  }
+  .top nav {
+    display: flex;
+    gap: 1.75rem;
+    align-items: center;
+  }
+  .top nav a {
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .cta {
+    background: #1b1b1b;
+    color: #fff;
+    padding: 0.7rem 1.25rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+  }
+  .cta:hover {
+    background: var(--orange);
+  }
+  .cta.big {
+    padding: 1rem 1.75rem;
+    font-size: 1.1rem;
+  }
+  .hero {
+    position: relative;
+    margin: 0 var(--gutter);
+    border-radius: 6px;
+    overflow: hidden;
+    min-height: 78vh;
+    display: flex;
+    align-items: flex-end;
+  }
+  .bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+  }
+  .hero-card {
+    position: relative;
+    background: #fff;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3.5rem) 0;
+    border-top-right-radius: 6px;
+    max-width: min(760px, 92%);
+  }
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cyan-deep);
+  }
+  .hero h1 {
+    font-size: clamp(2.6rem, 1.4rem + 5vw, 5.8rem);
+    margin: 0;
+  }
+  .intro {
+    padding-block: clamp(4rem, 8vw, 7rem);
+  }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 6rem);
+  }
+  blockquote {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(2rem, 1.2rem + 3vw, 3.4rem);
+    line-height: 1.1;
+    color: var(--cyan-deep);
+  }
+  .small-h {
+    font-size: 1.6rem !important;
+    margin-bottom: 1rem;
+  }
+  .events {
+    padding-block: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid #e6e6e6;
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2rem;
+  }
+  .events h2,
+  .band h2,
+  .news h2 {
+    font-size: clamp(2.6rem, 1.6rem + 4vw, 4.8rem);
+  }
+  .link {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .list li {
+    border-top: 1px solid #1b1b1b;
+  }
+  .list li:last-child {
+    border-bottom: 1px solid #1b1b1b;
+  }
+  .list a {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr) auto;
+    gap: 2rem;
+    align-items: center;
+    padding: 1.5rem 0;
+    text-decoration: none;
+  }
+  .list a:hover .t {
+    color: var(--orange);
+  }
+  .day {
+    font-family: var(--serif);
+    font-size: 4rem;
+    line-height: 1;
+    display: block;
+  }
+  .mon {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+  .t {
+    display: block;
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 1rem + 1.2vw, 2rem);
+    line-height: 1.15;
+    transition: color 0.2s;
+  }
+  .meta {
+    color: #666;
+  }
+  .thumb {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  .band {
+    padding-block: clamp(4rem, 8vw, 7rem);
+    background: #f6f4f0;
+  }
+  .members {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+  .member {
+    text-decoration: none;
+    display: grid;
+    gap: 0.2rem;
+  }
+  .member img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+  }
+  .name {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.6rem;
+  }
+  .voice {
+    color: #666;
+    font-size: 0.9rem;
+  }
+  .booking {
+    background: var(--cyan);
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+  .booking-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 3rem;
+    align-items: center;
+  }
+  .booking h2 {
+    font-size: clamp(2.4rem, 1.4rem + 3.5vw, 4.2rem);
+    margin-bottom: 1.25rem;
+  }
+  .booking p {
+    font-size: 1.15rem;
+    margin-bottom: 2rem;
+  }
+  .cut {
+    width: 100%;
+    height: auto;
+  }
+  .news {
+    padding-block: clamp(4rem, 8vw, 6rem);
+  }
+  .news-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 3rem;
+  }
+  .news :global(.nl) {
+    border-radius: 4px;
+    border-width: 1px;
+  }
+  .news :global(.btn) {
+    border-radius: 4px;
+  }
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-block: 2rem;
+    border-top: 1px solid #e6e6e6;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 800px) {
+    .intro-grid,
+    .booking-grid,
+    .news-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .members {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .top nav a:not(.cta) {
+      display: none;
+    }
+    .list a {
+      grid-template-columns: 5rem minmax(0, 1fr);
+      gap: 1rem;
+    }
+    .day {
+      font-size: 2.8rem;
+    }
+    .thumb {
+      display: none;
+    }
+    .hero {
+      min-height: 70vh;
+    }
+  }
+</style>

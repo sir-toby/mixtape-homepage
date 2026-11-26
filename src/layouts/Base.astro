@@ -1,0 +1,98 @@
+---
+import '@fontsource-variable/big-shoulders-display';
+import '@fontsource-variable/outfit';
+import '@fontsource/space-mono/400.css';
+import '@fontsource/space-mono/700.css';
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import favicon from '../assets/brand/favicon.png';
+import ogDefault from '../assets/photos/bardentreffen-2026-stage.jpg';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: ImageMetadata;
+  /** Bare page without site header/footer (used by the design prototypes). */
+  bare?: boolean;
+  noindex?: boolean;
+}
+
+const { title, description = 'Mixtape – A-cappella-Musik, die Spaß macht!', image = ogDefault, bare = false } = Astro.props;
+const fullTitle = title ? `${title} | Mixtape` : 'Mixtape – A-cappella-Musik, die Spaß macht!';
+const noindex = Astro.props.noindex || import.meta.env.PUBLIC_NOINDEX === '1';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const og = await getImage({ src: image, width: 1200, format: 'jpg' });
+const icon32 = await getImage({ src: favicon, width: 32, format: 'png' });
+const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" href={icon32.src} type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href={icon180.src} />
+    <meta name="theme-color" content="#f7f2e8" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="Mixtape" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(og.src, Astro.site)} />
+    <link rel="sitemap" href={`${import.meta.env.BASE_URL}sitemap-index.xml`} />
+    <slot name="head" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body class:list={[{ bare }]}>
+    {!bare && <a class="skip visually-hidden" href="#main">Zum Inhalt springen</a>}
+    {!bare && <Header />}
+    <main id="main">
+      <slot />
+    </main>
+    {!bare && <Footer />}
+    <script>
+      const io = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          }),
+        { rootMargin: '0px 0px -10% 0px' },
+      );
+      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
+
+<style>
+  body {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+  .skip:focus {
+    position: fixed !important;
+    top: 8px;
+    left: 8px;
+    width: auto;
+    height: auto;
+    clip: auto;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 8px;
+  }
+</style>

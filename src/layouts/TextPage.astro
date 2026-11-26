@@ -1,0 +1,33 @@
+---
+// Simple page for long Markdown text (Impressum, Datenschutz, …).
+import { getEntry, render } from 'astro:content';
+import Base from './Base.astro';
+import PageHero from '../components/PageHero.astro';
+
+interface Props {
+  id: string;
+  label: string;
+  noindex?: boolean;
+}
+const { id, label, noindex } = Astro.props;
+const page = await getEntry('pages', id);
+if (!page) throw new Error(`Seite "${id}" fehlt in src/content/pages`);
+const { Content } = await render(page);
+---
+
+<Base title={page.data.title} description={page.data.description} noindex={noindex}>
+  <PageHero label={label} title={page.data.title} />
+  <section class="wrap body">
+    <div class="prose"><Content /></div>
+    <slot />
+  </section>
+</Base>
+
+<style>
+  .body {
+    padding-block: clamp(2.5rem, 6vw, 5rem);
+  }
+  .prose {
+    overflow-wrap: break-word;
+  }
+</style>

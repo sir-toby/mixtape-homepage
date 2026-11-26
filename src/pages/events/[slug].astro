@@ -1,0 +1,220 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Reel from '../../components/Reel.astro';
+import { getEvents, formatDate, formatWeekdayLong, formatTime, mapsUrl, isoDay, type Event } from '../../lib/events';
+import { url } from '../../lib/url';
+import settings from '../../data/settings.json';
+
+export async function getStaticPaths() {
+  const { upcoming, past } = await getEvents();
+  return [...upcoming, ...past].map((event) => ({ params: { slug: event.id }, props: { event, isPast: past.includes(event) } }));
+}
+
+interface Props {
+  event: Event;
+  isPast: boolean;
+}
+const { event, isPast } = Astro.props;
+const { data } = event;
+const { Content } = await render(event);
+const maps = mapsUrl(event);
+
+const jsonLd = data.private
+  ? undefined
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'MusicEvent',
+      name: data.title,
+      startDate: data.start ? `${isoDay(data.date)}T${data.start}` : isoDay(data.date),
+      ...(data.end && { endDate: `${isoDay(data.date)}T${data.end}` }),
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      ...(data.location && {
+        location: { '@type': 'Place', name: data.location, address: data.address ?? data.location },
+      }),
+      performer: { '@type': 'MusicGroup', name: 'Mixtape', url: Astro.site?.toString() },
+      ...(data.image && { image: new URL(data.image.src, Astro.site).toString() }),
+    };
+---
+
+<Base title={data.title} description={`${formatDate(data.date)}${data.location ? ` · ${data.location}` : ''} – Mixtape live.`} image={data.image}>
+  {jsonLd && <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />}
+  <article class="wrap event">
+    <a class="back" href={url('/events/')}><Icon name="arrow" size={18} class="flip" /> Alle Termine</a>
+    <div class="grid">
+      <div class="info">
+        <span class="label">{isPast ? 'Bisheriger Auftritt' : data.private ? 'Geschlossene Veranstaltung' : 'Live'}</span>
+        <h1>{data.title}</h1>
+        <ul class="facts">
+          <li><Icon name="calendar" /> {formatWeekdayLong(data.date)}, {formatDate(data.date)}</li>
+          <li><Icon name="clock" /> {formatTime(event)}</li>
+          {
+            data.location && (
+              <li>
+                <Icon name="pin" />
+                <span>
+                  {data.location}
+                  {data.address && <span class="addr">{data.address}</span>}
+                </span>
+              </li>
+            )
+          }
+        </ul>
+        <div class="prose"><Content /></div>
+        {
+          data.links.length > 0 && (
+            <ul class="links">
+              {data.links.map((l) => (
+                <li>
+                  <a class="btn btn--cyan" href={l.url} target="_blank" rel="noopener">
+                    {l.label} <Icon name="arrow-up-right" size={18} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        {
+          !isPast && (
+            <div class="cta">
+              <a class="btn" href={url(`/events/${event.id}.ics`)} download>
+                <Icon name="calendar" size={18} /> In den Kalender
+              </a>
+              {maps && (
+                <a class="btn btn--ghost" href={maps} target="_blank" rel="noopener">
+                  <Icon name="pin" size={18} /> Auf der Karte
+                </a>
+              )}
+            </div>
+          )
+        }
+        {
+          data.private && (
+            <p class="private">
+              Ihr wünscht euch Mixtape auch für eure Feier? <a href={`mailto:${settings.email}`}>Schreibt uns!</a>
+            </p>
+          )
+        }
+      </div>
+      <div class="media">
+        {
+          data.image ? (
+            <Image src={data.image} alt={data.imageAlt ?? ''} widths={[480, 800, 1200]} sizes="(max-width: 860px) 100vw, 45vw" loading="eager" />
+          ) : (
+            <div class="placeholder" aria-hidden="true">
+              <Reel size="34%" color="var(--cyan)" hub="var(--ink)" />
+              <Reel size="34%" color="var(--orange)" hub="var(--ink)" speed="7s" />
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .event {
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 2rem;
+  }
+  .back :global(.flip) {
+    transform: scaleX(-1);
+  }
+  .back:hover {
+    color: var(--orange-deep);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+  h1 {
+    font-size: clamp(2.6rem, 1.4rem + 3.6vw, 5rem);
+    margin: 0.75rem 0 1.75rem;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+  .facts {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: grid;
+    gap: 0.6rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .facts li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+  }
+  .facts :global(svg) {
+    flex: none;
+    margin-top: 0.2em;
+    color: var(--orange);
+  }
+  .addr {
+    display: block;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .links,
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+  }
+  .private {
+    margin-top: 2rem;
+    font-weight: 600;
+  }
+  .private a {
+    color: var(--cyan-deep);
+  }
+  .media {
+    position: sticky;
+    top: 96px;
+  }
+  .media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    border: 2px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .placeholder {
+    aspect-ratio: 1;
+    background: var(--ink);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8%;
+    box-shadow: 8px 8px 0 var(--orange);
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .media {
+      position: static;
+      order: -1;
+    }
+    .placeholder {
+      aspect-ratio: 16 / 7;
+    }
+  }
+</style>

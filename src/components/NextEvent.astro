@@ -1,0 +1,157 @@
+---
+// The next upcoming event, shown big like the A-side of a tape.
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Icon from './Icon.astro';
+import Reel from './Reel.astro';
+import { url } from '../lib/url';
+import { formatDate, formatWeekdayLong, formatTime, mapsUrl, type Event } from '../lib/events';
+
+interface Props {
+  event: Event;
+}
+const { event } = Astro.props;
+const { data } = event;
+const { Content } = await render(event);
+const maps = mapsUrl(event);
+---
+
+<article class="next" data-reveal>
+  <div class="media">
+    {
+      data.image ? (
+        <Image src={data.image} alt={data.imageAlt ?? ''} widths={[480, 800, 1100]} sizes="(max-width: 860px) 100vw, 45vw" />
+      ) : (
+        <div class="placeholder">
+          <Reel size="38%" color="var(--cyan)" hub="var(--ink)" />
+          <Reel size="38%" color="var(--orange)" hub="var(--ink)" speed="7s" />
+        </div>
+      )
+    }
+  </div>
+  <div class="info">
+    <span class="label">Nächster Auftritt</span>
+    <h3><a href={url(`/events/${event.id}/`)}>{data.title}</a></h3>
+    <ul class="facts">
+      <li><Icon name="calendar" /> {formatWeekdayLong(data.date)}, {formatDate(data.date)}</li>
+      <li><Icon name="clock" /> {formatTime(event)}</li>
+      {
+        data.location && (
+          <li>
+            <Icon name="pin" />
+            <span>
+              {data.location}
+              {data.address && <span class="addr">{data.address}</span>}
+            </span>
+          </li>
+        )
+      }
+    </ul>
+    <div class="text"><Content /></div>
+    <div class="cta">
+      <a class="btn" href={url(`/events/${event.id}/`)}>Details <Icon name="arrow" size={18} /></a>
+      <a class="btn btn--ghost" href={url(`/events/${event.id}.ics`)} download>
+        <Icon name="calendar" size={18} /> In den Kalender
+      </a>
+      {
+        maps && (
+          <a class="btn btn--ghost" href={maps} target="_blank" rel="noopener">
+            <Icon name="pin" size={18} /> Karte
+          </a>
+        )
+      }
+    </div>
+  </div>
+</article>
+
+<style>
+  .next {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    background: var(--card);
+    border-radius: calc(var(--radius) + 6px);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 2px solid var(--ink);
+  }
+  .media {
+    background: var(--ink);
+    min-height: 100%;
+    position: relative;
+  }
+  .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 1;
+  }
+  .placeholder {
+    aspect-ratio: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8%;
+  }
+  .info {
+    padding: clamp(1.5rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  h3 {
+    font-size: clamp(2.2rem, 1.6rem + 2.5vw, 3.6rem);
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+  h3 a {
+    text-decoration: none;
+  }
+  h3 a:hover {
+    color: var(--orange);
+  }
+  .facts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.5rem;
+    font-weight: 600;
+  }
+  .facts li {
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+  }
+  .facts :global(svg) {
+    flex: none;
+    margin-top: 0.2em;
+    color: var(--orange);
+  }
+  .addr {
+    display: block;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .text {
+    color: var(--ink-soft);
+  }
+  .text :global(p:last-child) {
+    margin: 0;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: auto;
+  }
+  @media (max-width: 860px) {
+    .next {
+      grid-template-columns: 1fr;
+    }
+    .media img {
+      aspect-ratio: 4 / 3;
+      object-position: top;
+    }
+  }
+</style>

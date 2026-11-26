@@ -1,0 +1,70 @@
+---
+interface Props {
+  items: string[];
+  class?: string;
+}
+const { items, class: className } = Astro.props;
+const row = [...items, ...items, ...items];
+---
+
+<div class:list={['marquee', className]} aria-hidden="true">
+  <div class="track">
+    {
+      [0, 1].map(() => (
+        <div class="group">
+          {row.map((item) => (
+            <span class="item">
+              {item}
+              <span class="star">✦</span>
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--paper);
+    padding-block: 0.9rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.4rem);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+  .track {
+    display: flex;
+    width: max-content;
+    animation: scroll 40s linear infinite;
+  }
+  .group {
+    display: flex;
+  }
+  .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding-right: 1.2rem;
+    white-space: nowrap;
+  }
+  .item:nth-child(4n + 2) {
+    color: var(--cyan);
+  }
+  .item:nth-child(4n + 4) {
+    color: var(--orange);
+  }
+  .star {
+    color: var(--paper);
+    font-size: 0.6em;
+  }
+  @keyframes scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>

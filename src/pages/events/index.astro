@@ -1,0 +1,130 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import NextEvent from '../../components/NextEvent.astro';
+import EventTrack from '../../components/EventTrack.astro';
+import NewsletterForm from '../../components/NewsletterForm.astro';
+import { getEvents } from '../../lib/events';
+import settings from '../../data/settings.json';
+
+const { upcoming, past } = await getEvents();
+const [next, ...later] = upcoming;
+
+// Past events grouped by year, newest first.
+const byYear = Object.entries(
+  past.reduce<Record<string, typeof past>>((acc, e) => {
+    (acc[e.data.date.getUTCFullYear()] ??= []).push(e);
+    return acc;
+  }, {}),
+).sort(([a], [b]) => Number(b) - Number(a));
+---
+
+<Base title="Termine" description="Alle Auftritte von Mixtape: kommende Konzerte und bisherige Auftritte.">
+  <PageHero label="Tracklist" title="Termine" intro="Hier findet ihr unsere nächsten Auftritte – und alles, was wir schon gesungen haben." tone="cyan" />
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="sub">Demnächst</h2>
+      {
+        next ? (
+          <>
+            <NextEvent event={next} />
+            {later.length > 0 && (
+              <ol class="tracklist">
+                {later.map((e, i) => (
+                  <EventTrack event={e} index={i + 2} />
+                ))}
+              </ol>
+            )}
+          </>
+        ) : (
+          <p class="empty">Gerade stehen keine öffentlichen Termine an.</p>
+        )
+      }
+      <aside class="nl">
+        <p><strong>Keinen Auftritt verpassen?</strong> Wir senden ca. 3-4 mal im Jahr eine kurze Info über bevorstehende Auftritte.</p>
+        <NewsletterForm />
+      </aside>
+    </div>
+  </section>
+
+  {
+    byYear.length > 0 && (
+      <section class="section archive">
+        <div class="wrap">
+          <h2 class="sub">Bisherige Auftritte</h2>
+          {byYear.map(([year, events]) => (
+            <div class="year">
+              <h3>{year}</h3>
+              <ol class="tracklist">
+                {events.map((e, i) => (
+                  <EventTrack event={e} index={events.length - i} past />
+                ))}
+              </ol>
+            </div>
+          ))}
+          <p class="booking">
+            Ihr möchtet uns für eure Veranstaltung buchen? Schreibt uns an{' '}
+            <a href={`mailto:${settings.email}`}>{settings.email}</a>.
+          </p>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .section {
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+  .sub {
+    font-size: clamp(2.4rem, 1.6rem + 3vw, 4rem);
+    margin-bottom: 2rem;
+  }
+  .tracklist {
+    list-style: none;
+    padding: 0;
+    margin: 2.5rem 0 0;
+  }
+  .nl {
+    margin-top: 3.5rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 2px dashed var(--ink);
+    border-radius: var(--radius);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.5rem 3rem;
+    align-items: center;
+  }
+  .nl p {
+    margin: 0;
+  }
+  .archive {
+    background: var(--paper-2);
+  }
+  .year + .year {
+    margin-top: 3rem;
+  }
+  .year h3 {
+    font-size: 2rem;
+    color: var(--orange);
+  }
+  .year .tracklist {
+    margin-top: 1rem;
+  }
+  .booking {
+    margin-top: 3rem;
+  }
+  .booking a {
+    color: var(--cyan-deep);
+    font-weight: 600;
+  }
+  .empty {
+    font-size: 1.2rem;
+  }
+  @media (max-width: 760px) {
+    .nl {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

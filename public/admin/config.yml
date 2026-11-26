@@ -1,0 +1,166 @@
+# Sveltia CMS – https://sveltiacms.app (Decap-compatible configuration)
+# Every save is a commit to `main`; GitHub Actions then rebuilds and deploys the site.
+backend:
+  name: github
+  repo: sir-toby/mixtape-homepage
+  branch: main
+  commit_messages:
+    create: 'CMS: {{collection}} „{{slug}}“ angelegt'
+    update: 'CMS: {{collection}} „{{slug}}“ geändert'
+    delete: 'CMS: {{collection}} „{{slug}}“ gelöscht'
+    uploadMedia: 'CMS: Bild {{path}} hochgeladen'
+    deleteMedia: 'CMS: Bild {{path}} gelöscht'
+
+site_url: https://sir-toby.github.io/mixtape-homepage/
+publish_mode: simple
+
+# Images inserted into Markdown text are served as-is from public/uploads.
+media_folder: /public/uploads
+public_folder: /uploads
+
+output:
+  omit_empty_optional_fields: true
+
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  - name: events
+    label: Termine
+    label_singular: Termin
+    description: Auftritte. Vergangene Termine wandern automatisch in den Rückblick.
+    folder: src/content/events
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{title}}'
+    # Relative to the collection folder, so the front matter gets a path that
+    # Astro's image() helper resolves and optimises (src/assets/events/…).
+    media_folder: ../../assets/events
+    public_folder: ../../assets/events
+    summary: "{{date | date('DD.MM.YYYY')}} · {{title}}"
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    fields:
+      - { label: Titel, name: title, widget: string }
+      - label: Datum
+        name: date
+        widget: datetime
+        time_format: false
+        date_format: DD.MM.YYYY
+        format: YYYY-MM-DD
+        picker_utc: true
+      - label: Beginn
+        name: start
+        widget: string
+        required: false
+        hint: 'Uhrzeit, z. B. 19:30. Leer lassen = ganztägig.'
+        pattern: ['^\d{2}:\d{2}$', 'Bitte im Format HH:MM angeben, z. B. 19:30']
+      - label: Ende
+        name: end
+        widget: string
+        required: false
+        pattern: ['^\d{2}:\d{2}$', 'Bitte im Format HH:MM angeben, z. B. 21:00']
+      - { label: Ort, name: location, widget: string, required: false, hint: 'z. B. Kirche St. Jakob' }
+      - { label: Adresse, name: address, widget: string, required: false, hint: 'z. B. Jakobsplatz 1, Nürnberg' }
+      - { label: Bild / Plakat, name: image, widget: image, required: false }
+      - { label: Bildbeschreibung, name: imageAlt, widget: string, required: false, hint: 'Was ist auf dem Bild zu sehen? (für Screenreader)' }
+      - label: Links
+        name: links
+        widget: list
+        required: false
+        hint: 'Zusätzliche Buttons, z. B. Tickets oder Veranstalter-Seite.'
+        fields:
+          - { label: Beschriftung, name: label, widget: string }
+          - { label: URL, name: url, widget: string }
+      - { label: Private / geschlossene Veranstaltung, name: private, widget: boolean, default: false, required: false }
+      - { label: Entwurf (nicht anzeigen), name: draft, widget: boolean, default: false, required: false }
+      - { label: Beschreibung, name: body, widget: markdown, required: false }
+
+  - name: members
+    label: Mitglieder
+    label_singular: Mitglied
+    folder: src/content/members
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{name}}'
+    identifier_field: name
+    media_folder: ../../assets/members
+    public_folder: ../../assets/members
+    summary: '{{name}} · {{voice}}'
+    sortable_fields: [order, name]
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Stimme, name: voice, widget: string, hint: 'z. B. Sopran, Tenor & Beatbox' }
+      - { label: Foto, name: photo, widget: image }
+      - { label: Fotobeschreibung, name: photoAlt, widget: string, required: false }
+      - { label: Eigene Website, name: website, widget: string, required: false }
+      - { label: Ehemaliges Mitglied, name: former, widget: boolean, default: false, required: false }
+      - { label: Reihenfolge, name: order, widget: number, value_type: int, default: 10 }
+      - { label: Text, name: body, widget: markdown }
+
+  - name: pages
+    label: Seiten
+    files:
+      - name: home
+        label: Startseite
+        file: src/content/pages/home.md
+        fields:
+          - { label: Seitentitel, name: title, widget: string }
+          - { label: Beschreibung (Suchmaschinen), name: description, widget: text, required: false }
+          - { label: Slogan (große Überschrift), name: tagline, widget: string }
+          - { label: Begrüßung (Überschrift), name: heading, widget: string }
+          - { label: Begrüßungstext, name: body, widget: markdown }
+          - { label: Buchungs-Text, name: bookingText, widget: text }
+          - { label: Buchungs-Button, name: bookingButton, widget: string }
+      - name: wer-wir-sind
+        label: Über uns
+        file: src/content/pages/wer-wir-sind.md
+        fields:
+          - { label: Seitentitel, name: title, widget: string }
+          - { label: Beschreibung (Suchmaschinen), name: description, widget: text, required: false }
+          - { label: Text, name: body, widget: markdown }
+          - label: Besetzung
+            name: lineup
+            widget: list
+            summary: '{{period}}'
+            fields:
+              - { label: Zeitraum, name: period, widget: string }
+              - { label: Namen, name: names, widget: string }
+      - name: newsletter
+        label: Newsletter
+        file: src/content/pages/newsletter.md
+        fields:
+          - { label: Seitentitel, name: title, widget: string }
+          - { label: Beschreibung (Suchmaschinen), name: description, widget: text, required: false }
+          - { label: Text, name: body, widget: markdown }
+      - name: impressum
+        label: Impressum
+        file: src/content/pages/impressum.md
+        fields:
+          - { label: Seitentitel, name: title, widget: string }
+          - { label: Text, name: body, widget: markdown }
+      - name: datenschutzerklaerung
+        label: Datenschutzerklärung
+        file: src/content/pages/datenschutzerklaerung.md
+        fields:
+          - { label: Seitentitel, name: title, widget: string }
+          - { label: Text, name: body, widget: markdown }
+
+  - name: settings
+    label: Einstellungen
+    files:
+      - name: settings
+        label: Kontakt & Links
+        file: src/data/settings.json
+        fields:
+          - { label: Name, name: siteName, widget: string }
+          - { label: E-Mail, name: email, widget: string }
+          - { label: Instagram-URL, name: instagram, widget: string }
+          - { label: Newsletter-Formular (CleverReach-URL), name: newsletterFormAction, widget: string }
+          - { label: Genres (Laufband), name: genres, widget: list }
