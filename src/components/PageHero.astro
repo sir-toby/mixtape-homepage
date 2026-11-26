@@ -3,7 +3,7 @@ import CassetteOutline from './CassetteOutline.astro';
 import { hyphenate } from '../lib/hyphenate';
 
 interface Props {
-  label: string;
+  label?: string;
   title: string;
   intro?: string;
   tone?: 'cyan' | 'orange' | 'paper';
@@ -14,7 +14,7 @@ const { label, title, intro, tone = 'paper' } = Astro.props;
 <section class:list={['page-hero', tone, { 'on-bright': tone !== 'paper' }]}>
   <CassetteOutline class="shape" />
   <div class="wrap inner">
-    <span class="side-tag">{label}</span>
+    {label && <span class="side-tag">{label}</span>}
     <h1>{hyphenate(title)}</h1>
     {intro && <p class="intro">{intro}</p>}
     <slot />

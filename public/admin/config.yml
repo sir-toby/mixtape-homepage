@@ -112,18 +112,51 @@ collections:
         fields:
           - { label: Seitentitel, name: title, widget: string }
           - { label: Beschreibung (Suchmaschinen), name: description, widget: text, required: false }
-          - { label: Slogan (große Überschrift), name: tagline, widget: string }
+          - { label: Zeile über dem Slogan, name: kicker, widget: string, required: false, hint: 'z. B. Vocalband · A cappella' }
+          - { label: Slogan (große Überschrift), name: tagline, widget: string, hint: 'Erscheint auch im Footer. Das Wort „Spaß“ wird orange hervorgehoben.' }
+          - { label: Satz unter dem Slogan, name: lead, widget: string, required: false }
+          - { label: Überschrift Termine, name: eventsHeading, widget: string }
           - { label: Begrüßung (Überschrift), name: heading, widget: string }
           - { label: Begrüßungstext, name: body, widget: markdown }
+          - { label: Bildunterschrift am Foto, name: photoCaption, widget: string, required: false }
+          - { label: Überschrift Band, name: bandHeading, widget: string }
+          - { label: Untertitel Band, name: bandIntro, widget: string, required: false }
+          - { label: Überschrift Buchung, name: bookingHeading, widget: string }
           - { label: Buchungs-Text, name: bookingText, widget: text }
           - { label: Buchungs-Button, name: bookingButton, widget: string }
+          - { label: Überschrift Newsletter, name: newsletterHeading, widget: string, hint: 'Der Text darunter kommt von der Seite „Newsletter“.' }
+      - name: termine
+        label: Termine (Seitentexte)
+        file: src/content/pages/termine.md
+        fields:
+          - { label: Seitentitel, name: title, widget: string }
+          - { label: Beschreibung (Suchmaschinen), name: description, widget: text, required: false }
+          - { label: Label über dem Titel, name: label, widget: string, required: false }
+          - { label: Einleitung im Seitenkopf, name: intro, widget: text, required: false }
+          - { label: Überschrift kommende Termine, name: upcomingHeading, widget: string }
+          - { label: Überschrift bisherige Auftritte, name: pastHeading, widget: string }
+          - { label: Text, wenn keine Termine anstehen, name: emptyText, widget: string }
+          - { label: 'Kalender-Abo: fetter Anfang', name: calendarTitle, widget: string }
+          - { label: 'Kalender-Abo: Text', name: calendarText, widget: text }
+          - { label: 'Newsletter-Kasten: fetter Anfang', name: newsletterTitle, widget: string }
+          - { label: 'Newsletter-Kasten: Text', name: newsletterText, widget: text }
+          - { label: Buchungshinweis unter dem Rückblick, name: bookingNote, widget: string, hint: 'Danach folgt automatisch die E-Mail-Adresse.' }
+          - { label: 'Private Termine: Hinweis', name: privateText, widget: string }
+          - { label: 'Private Termine: Link-Text', name: privateLink, widget: string, hint: 'Öffnet eine E-Mail an die Band.' }
       - name: wer-wir-sind
         label: Über uns
         file: src/content/pages/wer-wir-sind.md
         fields:
           - { label: Seitentitel, name: title, widget: string }
           - { label: Beschreibung (Suchmaschinen), name: description, widget: text, required: false }
+          - { label: Label über dem Titel, name: label, widget: string, required: false, hint: 'Handschrift-Zeile im Seitenkopf, z. B. Liner Notes' }
+          - { label: Einleitung im Seitenkopf, name: intro, widget: string, required: false }
           - { label: Text, name: body, widget: markdown }
+          - { label: Überschrift Mitglieder, name: membersHeading, widget: string }
+          - { label: Überschrift Besetzung, name: lineupHeading, widget: string }
+          - { label: Überschrift Ehemalige, name: formerHeading, widget: string }
+          - { label: Bildunterschrift Gruppenfoto (Ehemalige), name: oldPhotoCaption, widget: string, required: false }
+          - { label: Überschrift unten (vor den Buttons), name: ctaHeading, widget: string }
           - label: Besetzung
             name: lineup
             widget: list
@@ -137,19 +170,32 @@ collections:
         fields:
           - { label: Seitentitel, name: title, widget: string }
           - { label: Beschreibung (Suchmaschinen), name: description, widget: text, required: false }
-          - { label: Text, name: body, widget: markdown }
+          - { label: Label über dem Titel, name: label, widget: string, required: false }
+          - { label: Einleitung im Seitenkopf, name: intro, widget: string, required: false }
+          - { label: Text, name: body, widget: markdown, hint: 'Steht auch auf der Startseite beim Newsletter.' }
+          - { label: Hinweis unter dem Formular, name: hint, widget: text, required: false }
       - name: impressum
         label: Impressum
         file: src/content/pages/impressum.md
         fields:
           - { label: Seitentitel, name: title, widget: string }
+          - { label: Label über dem Titel, name: label, widget: string, required: false }
           - { label: Text, name: body, widget: markdown }
       - name: datenschutzerklaerung
         label: Datenschutzerklärung
         file: src/content/pages/datenschutzerklaerung.md
         fields:
           - { label: Seitentitel, name: title, widget: string }
+          - { label: Label über dem Titel, name: label, widget: string, required: false }
           - { label: Text, name: body, widget: markdown }
+
+      - name: fehlerseite
+        label: Fehlerseite (404)
+        file: src/content/pages/fehlerseite.md
+        fields:
+          - { label: Seitentitel (Browser-Tab), name: title, widget: string }
+          - { label: Überschrift, name: heading, widget: string }
+          - { label: Text, name: intro, widget: string, required: false }
 
   - name: settings
     label: Einstellungen

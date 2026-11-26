@@ -1,11 +1,13 @@
 ---
 // Buttons to subscribe to all appearances (webcal feed, Google Calendar) or copy the feed URL.
+import { getEntry } from 'astro:content';
 import Icon from './Icon.astro';
 
 interface Props {
   compact?: boolean;
 }
 const { compact = false } = Astro.props;
+const { calendarTitle, calendarText } = (await getEntry('pages', 'termine'))!.data;
 const feed = new URL(`${import.meta.env.BASE_URL}kalender.ics`, Astro.site);
 const webcal = feed.toString().replace(/^https?:/, 'webcal:');
 const google = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal)}`;
@@ -15,7 +17,7 @@ const google = `https://calendar.google.com/calendar/render?cid=${encodeURICompo
   {
     !compact && (
       <p>
-        <strong>Unsere Auftritte im eigenen Kalender:</strong> Abonniert den Mixtape-Kalender, dann erscheinen neue Termine automatisch bei euch.
+        <strong>{calendarTitle}</strong> {calendarText}
       </p>
     )
   }

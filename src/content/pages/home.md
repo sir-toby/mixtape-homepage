@@ -5,6 +5,14 @@ tagline: A-cappella-Musik, die Spaß macht!
 heading: Herzlich Willkommen auf unserer Homepage!
 bookingText: "Ihr sucht nach einem besonderen Geschenk für eine Geburtstagsfeier oder eigene Veranstaltung? Ihr habt einen Slot in einem Konzert oder Konzertprogramm, wo Mixtape passt? Kurzum: Ihr würdet uns gerne buchen?"
 bookingButton: Kontaktiere uns!
+kicker: Vocalband · A cappella
+lead: Seit 2022 singen wir gemeinsam Pop, Jazz, Rock und Singer/Songwriter.
+eventsHeading: Termine
+photoCaption: Live beim Bardentreffen 2026
+bandHeading: Wir sind Mixtape
+bandIntro: echt, nahbar, berührend und mitreißend.
+bookingHeading: Mixtape live bei euch
+newsletterHeading: Nichts verpassen
 ---
 
 Stöbert gerne, um mehr über uns zu erfahren. Wollt ihr mehr hören und sehen? Dann schaut auf unsere [Instagram-Seite](https://www.instagram.com/mixtape_acappella/).

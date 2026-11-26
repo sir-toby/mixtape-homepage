@@ -6,7 +6,7 @@ import PageHero from '../components/PageHero.astro';
 
 interface Props {
   id: string;
-  label: string;
+  label?: string;
   noindex?: boolean;
 }
 const { id, label, noindex } = Astro.props;
@@ -16,7 +16,7 @@ const { Content } = await render(page);
 ---
 
 <Base title={page.data.title} description={page.data.description} noindex={noindex}>
-  <PageHero label={label} title={page.data.title} />
+  <PageHero label={label ?? page.data.label} title={page.data.title} intro={page.data.intro} />
   <section class="wrap body">
     <div class="prose"><Content /></div>
     <slot />

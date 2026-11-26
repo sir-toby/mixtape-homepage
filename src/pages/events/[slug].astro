@@ -7,6 +7,7 @@ import Cassette from '../../components/Cassette.astro';
 import { getEvents, formatDate, formatWeekdayLong, formatTime, mapsUrl, isoDay, type Event } from '../../lib/events';
 import { url } from '../../lib/url';
 import settings from '../../data/settings.json';
+import { getEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const { upcoming, past } = await getEvents();
@@ -20,6 +21,7 @@ interface Props {
 const { event, isPast } = Astro.props;
 const { data } = event;
 const { Content } = await render(event);
+const { privateText, privateLink } = (await getEntry('pages', 'termine'))!.data;
 const maps = mapsUrl(event);
 
 const jsonLd = data.private
@@ -93,7 +95,7 @@ const jsonLd = data.private
         {
           data.private && (
             <p class="private">
-              Ihr wünscht euch Mixtape auch für eure Feier? <a href={`mailto:${settings.email}`}>Schreibt uns!</a>
+              {privateText} <a href={`mailto:${settings.email}`}>{privateLink}</a>
             </p>
           )
         }

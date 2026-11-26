@@ -4,6 +4,9 @@ import settings from '../data/settings.json';
 import Icon from './Icon.astro';
 import Reel from './Reel.astro';
 import { url } from '../lib/url';
+import { getEntry } from 'astro:content';
+
+const { tagline } = (await getEntry('pages', 'home'))!.data;
 ---
 
 <div class="stripe-band" aria-hidden="true"></div>
@@ -11,7 +14,7 @@ import { url } from '../lib/url';
   <div class="wrap grid">
     <div class="brand">
       <Logo class="logo" role="img" aria-label="Mixtape" />
-      <p>A-cappella-Musik, die Spaß macht!</p>
+      {tagline && <p>{tagline}</p>}
     </div>
     <nav aria-label="Seiten">
       <span class="mono head">Seiten</span>

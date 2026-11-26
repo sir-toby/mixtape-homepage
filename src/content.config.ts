@@ -41,16 +41,29 @@ const members = defineCollection({
     }),
 });
 
+/** Short text fields of the single pages. Each page uses its own subset (see public/admin/config.yml). */
+const textFields = [
+  // all pages with a page header
+  'label', 'intro',
+  // home
+  'tagline', 'kicker', 'lead', 'heading', 'photoCaption', 'eventsHeading', 'bandHeading', 'bandIntro',
+  'bookingHeading', 'bookingText', 'bookingButton', 'newsletterHeading',
+  // events page (termine.md)
+  'upcomingHeading', 'pastHeading', 'emptyText', 'calendarTitle', 'calendarText', 'newsletterTitle', 'newsletterText',
+  'bookingNote', 'privateText', 'privateLink',
+  // about
+  'membersHeading', 'lineupHeading', 'formerHeading', 'oldPhotoCaption', 'ctaHeading',
+  // newsletter
+  'hint',
+] as const;
+
 /** Einzelseiten. Jede Datei hat ihre eigenen Felder, daher ist fast alles optional. */
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
-    description: z.string().optional(),
-    tagline: z.string().optional(),
-    heading: z.string().optional(),
-    bookingText: z.string().optional(),
-    bookingButton: z.string().optional(),
+    description: optional(z.string()),
+    ...Object.fromEntries(textFields.map((k) => [k, optional(z.string())])) as Record<(typeof textFields)[number], z.ZodType<string | undefined>>,
     lineup: z.array(z.object({ period: z.string(), names: z.string() })).optional(),
   }),
 });

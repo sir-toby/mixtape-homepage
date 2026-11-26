@@ -1,5 +1,6 @@
 ---
 title: Datenschutzerklärung
+label: Rechtliches
 ---
 
 Stand: 9. November 2024

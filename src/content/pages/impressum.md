@@ -1,5 +1,6 @@
 ---
 title: Impressum
+label: Rechtliches
 ---
 
 ### Angaben gemäß § 5 TMG:

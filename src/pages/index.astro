@@ -32,9 +32,9 @@ const headline = esc(home.data.tagline ?? '')
 <Base description={home.data.description}>
   <section class="hero">
     <div class="wrap hero-grid">
-      <span class="label hero-label">Vocalband · A cappella</span>
+      {home.data.kicker && <span class="label hero-label">{home.data.kicker}</span>}
       <h1 class="hero-title" set:html={headline} />
-      <p class="lead">Seit 2022 singen wir gemeinsam Pop, Jazz, Rock und Singer/Songwriter.</p>
+      {home.data.lead && <p class="lead">{home.data.lead}</p>}
       <div class="hero-cta">
         <a class="btn btn--orange" href="#termine"><Icon name="play" size={16} /> Nächste Termine</a>
         <a class="btn btn--ghost rec" href={`mailto:${settings.email}`}><Icon name="rec" size={14} /> Mixtape buchen</a>
@@ -60,7 +60,7 @@ const headline = esc(home.data.tagline ?? '')
   <section id="termine" class="section">
     <div class="wrap">
       <header class="section-head">
-        <h2>Termine</h2>
+        <h2>{home.data.eventsHeading}</h2>
       </header>
       {next && <NextEvent event={next} />}
       {
@@ -96,7 +96,7 @@ const headline = esc(home.data.tagline ?? '')
         <span class="washi w1" aria-hidden="true"></span>
         <span class="washi w2" aria-hidden="true"></span>
         <Image src={livePhoto} alt="Mixtape singt live auf einer Treppe in der Nürnberger Altstadt" widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 40vw" />
-        <figcaption class="marker">Live beim Bardentreffen 2026</figcaption>
+        {home.data.photoCaption && <figcaption class="marker">{home.data.photoCaption}</figcaption>}
       </figure>
     </div>
   </section>
@@ -104,8 +104,8 @@ const headline = esc(home.data.tagline ?? '')
   <section class="section band tinted on-bright">
     <div class="wrap">
       <header class="section-head">
-        <h2>Wir sind Mixtape</h2>
-        <p class="intro">echt, nahbar, berührend und mitreißend.</p>
+        <h2>{home.data.bandHeading}</h2>
+        {home.data.bandIntro && <p class="intro">{home.data.bandIntro}</p>}
       </header>
       <ul class="inserts">
         {
@@ -150,7 +150,7 @@ const headline = esc(home.data.tagline ?? '')
       </div>
       <div>
         <span class="rec-light mono"><span class="dot"></span> Rec</span>
-        <h2>Mixtape live bei euch</h2>
+        <h2>{home.data.bookingHeading}</h2>
         <p class="booking-text">{home.data.bookingText}</p>
         <a class="btn" href={`mailto:${settings.email}`}><Icon name="mail" size={18} /> {home.data.bookingButton}</a>
       </div>
@@ -161,7 +161,7 @@ const headline = esc(home.data.tagline ?? '')
     <div class="wrap deck-grid">
       <div>
         <span class="label">Newsletter</span>
-        <h2>Nichts verpassen</h2>
+        <h2>{home.data.newsletterHeading}</h2>
         <VuMeter />
       </div>
       <div>

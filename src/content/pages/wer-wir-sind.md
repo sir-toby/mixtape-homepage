@@ -8,6 +8,12 @@ lineup:
     names: Andreas Platz, Carina Poleschinski, Ellen Denzinger, Janika Zwingenberg, Sören Balendat, Tobias Bosch
   - period: seit 2026
     names: Andreas Platz, Carina Poleschinski, Ellen Denzinger, Tobias Bosch
+label: Liner Notes
+membersHeading: Die Stimmen
+lineupHeading: Besetzung
+formerHeading: Ehemalige Mitglieder
+oldPhotoCaption: Besetzung 2024–2026
+ctaHeading: Live erleben
 ---
 
 Wir sind **Mixtape** – echt, nahbar, berührend und mitreißend. Seit 2022 singen wir gemeinsam Pop, Jazz, Rock und Singer/Songwriter. Unsere Wege zur und mit der Musik waren ganz unterschiedlich – von der Musicaldarstellerin, Musikstudierten bis hin zum a-cappella-liebenden Chor-Nerd.

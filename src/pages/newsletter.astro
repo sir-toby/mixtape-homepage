@@ -13,14 +13,12 @@ const { Content } = await render(page);
 ---
 
 <Base title={page.data.title} description={page.data.description}>
-  <PageHero label="Bleibt auf Empfang" title={page.data.title} tone="cyan" />
+  <PageHero label={page.data.label} title={page.data.title} intro={page.data.intro} tone="cyan" />
   <section class="wrap body">
     <div class="card">
       <div class="prose lead"><Content /></div>
       <NewsletterForm />
-      <p class="small">
-        Nach dem Absenden bekommt ihr eine E-Mail zur Bestätigung. Abmelden geht jederzeit über den Link in jedem Newsletter.
-      </p>
+      {page.data.hint && <p class="small">{page.data.hint}</p>}
       <p class="insta">
         Mehr sehen und hören? <a href={settings.instagram} target="_blank" rel="noopener"><Icon name="instagram" size={18} /> Folgt uns auf Instagram</a>
       </p>

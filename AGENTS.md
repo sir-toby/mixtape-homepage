@@ -8,7 +8,7 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 |---|---|
 | `src/content/events/*.md` | Auftritte. Dateiname = URL-Slug `/events/<slug>/` (wie auf der alten WordPress-Seite). |
 | `src/content/members/*.md` | Bandmitglieder, `former: true` für Ehemalige. |
-| `src/content/pages/*.md` | Texte der Einzelseiten (Startseite, Über uns, Newsletter, Impressum, Datenschutz). |
+| `src/content/pages/*.md` | Texte der Einzelseiten: Startseite, Über uns, Newsletter, Impressum, Datenschutz, außerdem `termine.md` (Texte der Terminseite, Kalender-Abo, Hinweis bei privaten Terminen) und `fehlerseite.md` (404). Felder in `content.config.ts` (`textFields`) und `public/admin/config.yml`. |
 | `src/data/settings.json` | E-Mail, Instagram, CleverReach-Formular-URL, Genres. |
 | `src/content.config.ts` | Schemas der Collections. Neue Felder hier **und** in `public/admin/config.yml` eintragen. |
 | `src/assets/` | Bilder, die Astro optimiert (Fotos, Event-Plakate, Porträts). Logo als SVG in `src/assets/brand/`: `logo.svg`/`logo-light.svg` (Original), `logo-mark.svg` (Doppelspule + M-Strich, Ausschnitt aus `logo.svg`), `zahnrad*.svg` (Spulen-Nabe, steckt auch in `Reel.astro` und `Cassette.astro`). |
@@ -19,6 +19,7 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 ## Regeln
 
 - **Vor jeder Änderung `git pull --rebase`.** Das CMS committet direkt auf `main`, das Repo ändert sich also auch ohne lokale Arbeit.
+- **Lesbare Texte gehören ins CMS**, nicht in die Templates: Überschriften, Untertitel, Bildunterschriften, Hinweise. Im Code bleiben nur Bedienelemente (Navigation, allgemeine Buttons wie Details/Karte/Anmelden), Screenreader-Beschriftungen und Kassetten-Deko (Liner Notes, Vol. 01, Rec, Eure Feier, Privat).
 - **Texte nicht umschreiben.** Die Inhalte stammen von der alten Seite und gehören der Band. Neue kurze Texte (Überschriften, Hinweise) sind ok, bestehende nur auf Wunsch ändern.
 - **Interne Links immer über `url()`** aus `src/lib/url.ts` bauen, nie hart `/foo/`. Auf GitHub Pages liegt die Seite unter `/mixtape-homepage/`, später unter `/`. In Markdown dürfen Links mit `/` beginnen; `src/lib/satteri-links.mjs` setzt den Basis-Pfad davor.
 - **Bildpfade im Frontmatter ab Projektwurzel** schreiben (`image: /src/assets/events/x.jpg`). Astro löst sie auf, und nur so findet das CMS die Bilder in seiner Medienbibliothek; relative Pfade (`../../assets/…`) sieht es nicht.

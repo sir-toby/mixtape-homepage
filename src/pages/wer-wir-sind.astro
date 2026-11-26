@@ -18,7 +18,7 @@ const former = withContent.filter(({ m }) => m.data.former);
 ---
 
 <Base title={page.data.title} description={page.data.description}>
-  <PageHero label="Liner Notes" title={page.data.title} tone="orange" />
+  <PageHero label={page.data.label} title={page.data.title} intro={page.data.intro} tone="orange" />
 
   <section class="intro-section">
     <div class="wrap intro-grid">
@@ -32,7 +32,7 @@ const former = withContent.filter(({ m }) => m.data.former);
 
   <section class="members-section surface-2">
     <div class="wrap">
-      <h2 class="sub hand-heading" data-reveal>Die Stimmen</h2>
+      <h2 class="sub hand-heading" data-reveal>{page.data.membersHeading}</h2>
       <div class="members">
         {
           current.map(({ m, Content }, i) => (
@@ -61,7 +61,7 @@ const former = withContent.filter(({ m }) => m.data.former);
     page.data.lineup && (
       <section class="lineup-section">
         <div class="wrap">
-          <h2 class="sub hand-heading" data-reveal>Besetzung</h2>
+          <h2 class="sub hand-heading" data-reveal>{page.data.lineupHeading}</h2>
           <ol class="lineup" data-reveal>
             {page.data.lineup.map((l) => (
               <li>
@@ -79,7 +79,7 @@ const former = withContent.filter(({ m }) => m.data.former);
     former.length > 0 && (
       <section class="former-section surface-2">
         <div class="wrap">
-          <h2 class="sub hand-heading" data-reveal>Ehemalige Mitglieder</h2>
+          <h2 class="sub hand-heading" data-reveal>{page.data.formerHeading}</h2>
           <div class="former">
             {former.map(({ m, Content }) => (
               <article class="member small" id={m.id} data-reveal>
@@ -95,7 +95,7 @@ const former = withContent.filter(({ m }) => m.data.former);
           </div>
           <figure class="old-photo" data-reveal>
             <Image src={groupPhoto} alt="Mixtape in der Besetzung 2024–2026 schaut staunend auf eine Kassette" widths={[640, 1000, 1600]} sizes="(max-width: 1200px) 100vw, 1100px" />
-            <figcaption class="mono">Besetzung 2024–2026</figcaption>
+            {page.data.oldPhotoCaption && <figcaption class="mono">{page.data.oldPhotoCaption}</figcaption>}
           </figure>
         </div>
       </section>
@@ -104,7 +104,7 @@ const former = withContent.filter(({ m }) => m.data.former);
 
   <section class="cta-section">
     <div class="wrap cta">
-      <h2>Live erleben</h2>
+      <h2>{page.data.ctaHeading}</h2>
       <div class="cta-buttons">
         <a class="btn btn--orange" href={url('/events/')}><Icon name="play" size={16} /> Zu den Terminen</a>
         <a class="btn btn--cyan" href="mailto:info@mixtape-vocal.de"><Icon name="rec" size={12} /> Mixtape buchen</a>
