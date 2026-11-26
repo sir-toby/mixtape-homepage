@@ -315,8 +315,13 @@ const former = withContent.filter(({ m }) => m.data.former);
     font-size: 2rem;
     margin-bottom: 0.75rem;
   }
+  /* Photo fills its column at the card's height instead of growing to a square wider than the column */
   .member.small .photo {
-    aspect-ratio: 1;
+    aspect-ratio: auto;
+    min-height: 140px;
+  }
+  .member.small .photo img {
+    object-position: center 25%;
   }
   .member.small .prose {
     font-size: 0.95rem;
@@ -386,6 +391,8 @@ const former = withContent.filter(({ m }) => m.data.former);
       grid-template-columns: 96px minmax(0, 1fr);
     }
     .member.small .photo {
+      aspect-ratio: auto;
+      min-height: 96px;
       border-bottom: 0;
       border-right: 2px solid var(--ink);
     }
