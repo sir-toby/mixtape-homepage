@@ -43,9 +43,9 @@ const jsonLd = data.private
   {jsonLd && <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />}
   <article class="wrap event">
     <a class="back" href={url('/events/')}><Icon name="arrow" size={18} class="flip" /> Alle Termine</a>
+    <span class="side-tag">{isPast ? 'Bisheriger Auftritt' : data.private ? 'Geschlossene Veranstaltung' : 'Live'}</span>
     <div class="grid">
       <div class="info">
-        <span class="side-tag">{isPast ? 'Bisheriger Auftritt' : data.private ? 'Geschlossene Veranstaltung' : 'Live'}</span>
         <h1>{data.title}</h1>
         <ul class="facts">
           <li><Icon name="calendar" /> {formatWeekdayLong(data.date)}, {formatDate(data.date)}</li>
@@ -118,7 +118,8 @@ const jsonLd = data.private
     padding-block: clamp(2rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
   }
   .back {
-    display: inline-flex;
+    display: flex;
+    width: fit-content;
     align-items: center;
     gap: 0.5rem;
     font-weight: 600;
@@ -137,9 +138,16 @@ const jsonLd = data.private
     gap: clamp(2rem, 5vw, 4rem);
     align-items: start;
   }
+  .event > .side-tag {
+    display: block;
+    width: fit-content;
+  }
+  .grid {
+    margin-top: 0.75rem;
+  }
   h1 {
     font-size: clamp(2.6rem, 1.4rem + 3.6vw, 5rem);
-    margin: 0.75rem 0 1.75rem;
+    margin: 0 0 1.75rem;
     hyphens: auto;
     overflow-wrap: break-word;
   }
@@ -187,9 +195,14 @@ const jsonLd = data.private
     position: sticky;
     top: 96px;
   }
+  /* Always the whole image, whatever its format: full column width, but never taller than the window */
   .media img {
-    width: 100%;
+    display: block;
+    width: auto;
+    max-width: 100%;
     height: auto;
+    max-height: calc(100dvh - 16rem);
+    margin-inline: auto;
     border-radius: var(--radius);
     border: 2px solid var(--edge);
     box-shadow: 8px 8px 0 var(--edge);
@@ -215,6 +228,9 @@ const jsonLd = data.private
     .media {
       position: static;
       order: -1;
+    }
+    .media img {
+      max-height: none;
     }
     .placeholder {
       aspect-ratio: 16 / 9;
