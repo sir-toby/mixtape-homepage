@@ -6,7 +6,7 @@ import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import NewsletterForm from '../../components/NewsletterForm.astro';
-import logo from '../../assets/brand/logo-light.png';
+import Logo from '../../assets/brand/logo-light.svg';
 import groupCutout from '../../assets/brand/group-cutout-wide.png';
 import livePhoto from '../../assets/photos/bardentreffen-2026-stage.jpg';
 import settings from '../../data/settings.json';
@@ -23,7 +23,7 @@ const shown = [...upcoming, ...past.slice(0, Math.max(0, 4 - upcoming.length))];
 <Base title="Prototyp B – Bühne" bare noindex>
   <div class="b">
     <header class="top">
-      <a href={url('/prototypen/')}><Image src={logo} alt="Mixtape" width={150} densities={[1, 2]} /></a>
+      <a href={url('/prototypen/')}><Logo role="img" aria-label="Mixtape" width="150" height="47" /></a>
       <nav>
         <a href="#termine">Termine</a>
         <a href="#band">Band</a>

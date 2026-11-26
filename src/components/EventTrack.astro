@@ -2,7 +2,7 @@
 // One event as a row in a cassette-style tracklist, with a small preview image on wider screens.
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
-import LogoReels from './LogoReels.astro';
+import LogoMark from '../assets/brand/logo-mark.svg';
 import { url } from '../lib/url';
 import { formatDay, formatMonth, formatWeekday, formatYear, formatTime, type Event } from '../lib/events';
 
@@ -22,7 +22,7 @@ const { data } = event;
           <Image src={data.image} alt="" width={80} height={80} densities={[1, 2]} />
         ) : (
           <span class="fallback">
-            <LogoReels />
+            <LogoMark />
           </span>
         )
       }

@@ -11,7 +11,7 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 | `src/content/pages/*.md` | Texte der Einzelseiten (Startseite, Über uns, Newsletter, Impressum, Datenschutz). |
 | `src/data/settings.json` | E-Mail, Instagram, CleverReach-Formular-URL, Genres. |
 | `src/content.config.ts` | Schemas der Collections. Neue Felder hier **und** in `public/admin/config.yml` eintragen. |
-| `src/assets/` | Bilder, die Astro optimiert (Marke, Fotos, Event-Plakate, Porträts). |
+| `src/assets/` | Bilder, die Astro optimiert (Fotos, Event-Plakate, Porträts). Logo als SVG in `src/assets/brand/`: `logo.svg`/`logo-light.svg` (Original), `logo-mark.svg` (Doppelspule + M-Strich, Ausschnitt aus `logo.svg`), `zahnrad*.svg` (Spulen-Nabe, steckt auch in `Reel.astro` und `Cassette.astro`). |
 | `public/admin/` | Sveltia CMS (Konfiguration in `config.yml`). |
 | `src/pages/prototypen/` | Frühere Design-Entwürfe A (creme, `theme="cream"`), B und C (noindex, nicht in der Sitemap). Die Hauptseite ist Entwurf A2. |
 | `.github/workflows/deploy.yml` | Build und Deploy, Ziel über die Repo-Variable `DEPLOY_TARGET`. |

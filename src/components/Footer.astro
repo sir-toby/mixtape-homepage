@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import logo from '../assets/brand/logo-light.png';
+import Logo from '../assets/brand/logo-light.svg';
 import settings from '../data/settings.json';
 import Icon from './Icon.astro';
 import Reel from './Reel.astro';
@@ -11,7 +10,7 @@ import { url } from '../lib/url';
 <footer class="site-footer">
   <div class="wrap grid">
     <div class="brand">
-      <Image src={logo} alt="Mixtape" width={200} densities={[1, 2]} />
+      <Logo class="logo" role="img" aria-label="Mixtape" />
       <p>A-cappella-Musik, die Spaß macht!</p>
     </div>
     <nav aria-label="Seiten">
@@ -52,7 +51,8 @@ import { url } from '../lib/url';
     gap: 2.5rem;
     align-items: start;
   }
-  .brand img {
+  .brand :global(.logo) {
+    display: block;
     width: 200px;
     height: auto;
     margin-bottom: 1rem;

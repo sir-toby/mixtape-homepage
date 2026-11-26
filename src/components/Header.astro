@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import logo from '../assets/brand/logo.png';
+import Logo from '../assets/brand/logo.svg';
 import settings from '../data/settings.json';
 import Icon from './Icon.astro';
 import { url } from '../lib/url';
@@ -16,7 +15,7 @@ const current = Astro.url.pathname;
 <header class="site-header">
   <div class="wrap bar">
     <a href={url('/')} class="brand" aria-label="Mixtape – Startseite">
-      <Image src={logo} alt="" width={180} densities={[1, 2]} loading="eager" />
+      <Logo class="logo" aria-hidden="true" />
     </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav">
       <Icon name="menu" size={26} class="i-open" />
@@ -79,7 +78,11 @@ const current = Astro.url.pathname;
     gap: 1rem;
     min-height: 72px;
   }
-  .brand img {
+  .brand {
+    display: block;
+    line-height: 0;
+  }
+  .brand :global(.logo) {
     width: clamp(130px, 30vw, 170px);
     height: auto;
   }
