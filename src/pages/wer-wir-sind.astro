@@ -32,8 +32,7 @@ const former = withContent.filter(({ m }) => m.data.former);
 
   <section class="members-section surface-2">
     <div class="wrap">
-      <span class="side-tag" data-reveal>Side A</span>
-      <h2 class="sub" data-reveal>Die Stimmen</h2>
+      <h2 class="sub hand-heading" data-reveal>Die Stimmen</h2>
       <div class="members">
         {
           current.map(({ m, Content }, i) => (
@@ -62,7 +61,7 @@ const former = withContent.filter(({ m }) => m.data.former);
     page.data.lineup && (
       <section class="lineup-section">
         <div class="wrap">
-          <h2 class="sub" data-reveal>Besetzung</h2>
+          <h2 class="sub hand-heading" data-reveal>Besetzung</h2>
           <ol class="lineup" data-reveal>
             {page.data.lineup.map((l) => (
               <li>
@@ -80,8 +79,7 @@ const former = withContent.filter(({ m }) => m.data.former);
     former.length > 0 && (
       <section class="former-section surface-2">
         <div class="wrap">
-          <span class="side-tag" data-reveal>Side B</span>
-          <h2 class="sub" data-reveal>Ehemalige Mitglieder</h2>
+          <h2 class="sub hand-heading" data-reveal>Ehemalige Mitglieder</h2>
           <div class="former">
             {former.map(({ m, Content }) => (
               <article class="member small" id={m.id} data-reveal>
@@ -117,8 +115,7 @@ const former = withContent.filter(({ m }) => m.data.former);
 
 <style>
   .sub {
-    font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem);
-    margin: 0.25rem 0 clamp(2rem, 4vw, 3rem);
+    margin: 0 0 clamp(2rem, 4vw, 3rem);
   }
   .intro-section {
     padding-block: clamp(3rem, 7vw, 6rem);

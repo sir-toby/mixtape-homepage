@@ -25,8 +25,7 @@ const byYear = Object.entries(
 
   <section class="section">
     <div class="wrap">
-      <span class="side-tag">Side A</span>
-      <h2 class="sub">Demnächst</h2>
+      <h2 class="sub hand-heading">Demnächst</h2>
       {
         next ? (
           <>
@@ -57,8 +56,7 @@ const byYear = Object.entries(
     byYear.length > 0 && (
       <section class="section archive surface-2">
         <div class="wrap">
-          <span class="side-tag">Side B</span>
-          <h2 class="sub">Bisherige Auftritte</h2>
+          <h2 class="sub hand-heading">Bisherige Auftritte</h2>
           {byYear.map(([year, events]) => (
             <div class="year">
               <h3>{year}</h3>
@@ -84,8 +82,7 @@ const byYear = Object.entries(
     padding-block: clamp(3rem, 7vw, 6rem);
   }
   .sub {
-    font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem);
-    margin: 0.25rem 0 2rem;
+    margin: 0 0 2rem;
   }
   .tracklist {
     list-style: none;

@@ -60,7 +60,6 @@ const headline = esc(home.data.tagline ?? '')
   <section id="termine" class="section">
     <div class="wrap">
       <header class="section-head">
-        <span class="side-tag">Side A</span>
         <h2>Termine</h2>
       </header>
       {next && <NextEvent event={next} />}
@@ -88,7 +87,7 @@ const headline = esc(home.data.tagline ?? '')
           <span class="mono">Vol. 01</span>
         </div>
         <div class="jcard-body">
-          <div class="jcard-head mono"><span>Liner Notes</span><span>Side A + B</span></div>
+          <div class="jcard-head mono"><span>Liner Notes</span><span>Seit 2022</span></div>
           <h2>{home.data.heading}</h2>
           <div class="prose"><Welcome /></div>
         </div>
@@ -105,7 +104,6 @@ const headline = esc(home.data.tagline ?? '')
   <section class="section band tinted on-bright">
     <div class="wrap">
       <header class="section-head">
-        <span class="side-tag">Side B</span>
         <h2>Wir sind Mixtape</h2>
         <p class="intro">echt, nahbar, berührend und mitreißend.</p>
       </header>
@@ -390,9 +388,6 @@ const headline = esc(home.data.tagline ?? '')
   /* Band: J-card inserts */
   .band {
     background-color: var(--cyan);
-  }
-  .band .side-tag {
-    color: var(--ink);
   }
   .inserts {
     list-style: none;
