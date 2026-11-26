@@ -2,7 +2,7 @@
 // One event as a row in a cassette-style tracklist, with a small preview image on wider screens.
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
-import Reel from './Reel.astro';
+import LogoReels from './LogoReels.astro';
 import { url } from '../lib/url';
 import { formatDay, formatMonth, formatWeekday, formatYear, formatTime, type Event } from '../lib/events';
 
@@ -22,7 +22,7 @@ const { data } = event;
           <Image src={data.image} alt="" width={80} height={80} densities={[1, 2]} />
         ) : (
           <span class="fallback">
-            <Reel size="58%" color={past ? 'var(--ink-soft)' : 'var(--cyan)'} hub="#fff" still />
+            <LogoReels />
           </span>
         )
       }
@@ -86,7 +86,12 @@ const { data } = event;
     place-items: center;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, transparent 0 78%, var(--orange) 78% 89%, var(--cyan) 89%);
+    padding: 8% 0;
+    background: #fff;
+  }
+  .fallback :global(svg) {
+    height: 100%;
+    width: auto;
   }
   a:hover .thumb {
     transform: rotate(-4deg) scale(1.04);
