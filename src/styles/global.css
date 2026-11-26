@@ -28,6 +28,46 @@
   color-scheme: light;
 }
 
+/* Background pattern: off by default, switched on by the test backgrounds below */
+:root {
+  --pattern: none;
+  --pattern-size: auto;
+  --pattern-pos: 0 0;
+}
+
+/* Test background "Punkte": warm grey with comic halftone dots (Ben-Day dots) */
+:root[data-bg='punkte'] {
+  --paper: #ebe7e1;
+  --paper-2: #e1dbd2;
+  --line: #16171b24;
+  --pattern: radial-gradient(#d3cbbf 1.3px, transparent 1.7px), radial-gradient(#d3cbbf 1.3px, transparent 1.7px);
+  --pattern-size: 10px 10px;
+  --pattern-pos: 0 0, 5px 5px;
+}
+
+/* Test background "Raster": warm grey with a fine woven texture */
+:root[data-bg='raster'] {
+  --paper: #e9e5df;
+  --paper-2: #dfd9d0;
+  --line: #16171b24;
+  --pattern: repeating-linear-gradient(0deg, #16171b0d 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, #16171b0a 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(45deg, #ffffff33 0 1px, transparent 1px 6px);
+  --pattern-size: auto;
+}
+
+.surface,
+.surface-2 {
+  background-color: var(--paper);
+  background-image: var(--pattern);
+  background-size: var(--pattern-size);
+  background-position: var(--pattern-pos);
+}
+
+.surface-2 {
+  background-color: var(--paper-2);
+}
+
 /* First design draft (prototype A): warm cream paper */
 :root[data-theme='cream'] {
   --paper: #f7f2e8;
@@ -50,7 +90,10 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
+  background-color: var(--paper);
+  background-image: var(--pattern);
+  background-size: var(--pattern-size);
+  background-position: var(--pattern-pos);
   color: var(--ink);
   font-family: var(--font-body);
   font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);

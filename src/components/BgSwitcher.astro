@@ -1,0 +1,53 @@
+---
+// Temporary: lets the band compare test backgrounds on every page.
+// Visible only while a test background is active (?hintergrund=punkte|raster, back with ?hintergrund=weiss).
+const options = [
+  ['weiss', 'Weiß'],
+  ['punkte', 'Punkte'],
+  ['raster', 'Raster'],
+];
+---
+
+<div class="bg-switch" aria-label="Hintergrund testen">
+  <span class="mono">Hintergrund</span>
+  {options.map(([key, label]) => <a href={`?hintergrund=${key}`} data-bg-option={key}>{label}</a>)}
+</div>
+
+<style>
+  .bg-switch {
+    display: none;
+    position: fixed;
+    left: 12px;
+    bottom: 12px;
+    z-index: 90;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.45rem 0.35rem 0.8rem;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 999px;
+    box-shadow: 0 6px 20px #0005;
+    font-size: 0.85rem;
+  }
+  :global(html[data-bg]) .bg-switch {
+    display: flex;
+  }
+  .mono {
+    font-size: 0.65rem;
+    margin-right: 0.3rem;
+    color: #aab;
+  }
+  a {
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  a:hover {
+    background: #ffffff22;
+  }
+  :global(html[data-bg='punkte']) a[data-bg-option='punkte'],
+  :global(html[data-bg='raster']) a[data-bg-option='raster'] {
+    background: var(--orange);
+  }
+</style>

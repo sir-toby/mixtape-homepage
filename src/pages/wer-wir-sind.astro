@@ -30,7 +30,7 @@ const former = withContent.filter(({ m }) => m.data.former);
     </div>
   </section>
 
-  <section class="members-section">
+  <section class="members-section surface-2">
     <div class="wrap">
       <span class="side-tag" data-reveal>Side A</span>
       <h2 class="sub" data-reveal>Die Stimmen</h2>
@@ -78,7 +78,7 @@ const former = withContent.filter(({ m }) => m.data.former);
 
   {
     former.length > 0 && (
-      <section class="former-section">
+      <section class="former-section surface-2">
         <div class="wrap">
           <span class="side-tag" data-reveal>Side B</span>
           <h2 class="sub" data-reveal>Ehemalige Mitglieder</h2>
@@ -161,7 +161,6 @@ const former = withContent.filter(({ m }) => m.data.former);
 
   .members-section {
     padding-block: clamp(3rem, 7vw, 6rem);
-    background: var(--paper-2);
   }
   .members {
     display: grid;
@@ -284,7 +283,6 @@ const former = withContent.filter(({ m }) => m.data.former);
 
   .former-section {
     padding-block: clamp(3rem, 7vw, 6rem);
-    background: var(--paper-2);
   }
   .former {
     display: grid;

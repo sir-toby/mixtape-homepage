@@ -8,6 +8,7 @@ import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import BgSwitcher from '../components/BgSwitcher.astro';
 import favicon from '../assets/brand/favicon.png';
 import ogDefault from '../assets/photos/bardentreffen-2026-stage.jpg';
 
@@ -52,9 +53,19 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL(og.src, Astro.site)} />
     <link rel="sitemap" href={`${import.meta.env.BASE_URL}sitemap-index.xml`} />
+    <link rel="alternate" type="text/plain" title="Zusammenfassung für KI-Assistenten" href={`${import.meta.env.BASE_URL}llms.txt`} />
     <slot name="head" />
     <script is:inline>
       document.documentElement.classList.add('js');
+      // Test backgrounds (temporary): ?hintergrund=punkte|raster, remembered while browsing, reset with ?hintergrund=weiss
+      try {
+        const pick = new URLSearchParams(location.search).get('hintergrund');
+        if (pick === 'weiss') localStorage.removeItem('mixtape-bg');
+        else if (pick === 'punkte' || pick === 'raster') localStorage.setItem('mixtape-bg', pick);
+        const bg = localStorage.getItem('mixtape-bg');
+        if (bg) document.documentElement.dataset.bg = bg;
+        else if (pick === 'weiss') document.documentElement.dataset.bg = 'weiss';
+      } catch {}
     </script>
   </head>
   <body class:list={[{ bare }]}>
@@ -64,6 +75,7 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
       <slot />
     </main>
     {!bare && <Footer />}
+    <BgSwitcher />
     <script>
       const io = new IntersectionObserver(
         (entries) =>
