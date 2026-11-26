@@ -42,7 +42,7 @@ const { data } = event;
   }
   a {
     display: grid;
-    grid-template-columns: 2.5rem 6.5rem 1fr auto;
+    grid-template-columns: 2.5rem 5.5rem 1fr auto;
     align-items: center;
     gap: 1.25rem;
     padding: 1.1rem 0.75rem;
@@ -60,37 +60,26 @@ const { data } = event;
     color: var(--orange);
     font-weight: 700;
   }
+  /* Weekday above the day, month and year below: SO / 02 / AUG 2026 */
   .date {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 0.5rem;
-    align-items: baseline;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     line-height: 1.1;
   }
   .d {
-    grid-row: span 2;
     font-family: var(--font-display);
     font-weight: 800;
     font-size: 2.6rem;
-    line-height: 0.9;
+    line-height: 0.95;
+    font-variant-numeric: tabular-nums;
   }
   .wd,
   .m {
     font-size: 0.7rem;
     color: var(--ink-soft);
-  }
-  .wd {
-    grid-column: 2;
-  }
-  .m {
-    grid-column: 2;
     white-space: nowrap;
-  }
-  .date {
-    grid-template-areas: 'd wd' 'd m';
-  }
-  .d {
-    grid-area: d;
   }
   .title {
     display: block;
@@ -141,9 +130,6 @@ const { data } = event;
   .past .no {
     color: var(--ink-soft);
   }
-  .d {
-    font-variant-numeric: tabular-nums;
-  }
   @media (max-width: 640px) {
     a {
       grid-template-columns: 4.25rem minmax(0, 1fr);
@@ -151,26 +137,8 @@ const { data } = event;
       padding-inline: 0.25rem;
       align-items: start;
     }
-    /* Phone: day on top, weekday and month below, so nothing runs into the title */
-    .date {
-      grid-template-columns: 1fr;
-      grid-template-areas: 'd' 'wd' 'm';
-      row-gap: 0.15rem;
-    }
     .d {
-      grid-row: auto;
       font-size: 2.3rem;
-    }
-    .wd,
-    .m {
-      grid-column: auto;
-      font-size: 0.65rem;
-    }
-    .wd {
-      grid-area: wd;
-    }
-    .m {
-      grid-area: m;
     }
     a:hover {
       padding-inline: 0.5rem;
