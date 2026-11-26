@@ -1,10 +1,11 @@
 ---
 // Temporary: lets the band compare test backgrounds on every page.
-// Visible only while a test background is active (?hintergrund=punkte|raster, back with ?hintergrund=weiss).
+// Visible only while a test background is active (?hintergrund=punkte|raster|riffel, back with ?hintergrund=weiss).
 const options = [
   ['weiss', 'Weiß'],
   ['punkte', 'Punkte'],
   ['raster', 'Raster'],
+  ['riffel', 'Riffel'],
 ];
 ---
 
@@ -47,7 +48,8 @@ const options = [
     background: #ffffff22;
   }
   :global(html[data-bg='punkte']) a[data-bg-option='punkte'],
-  :global(html[data-bg='raster']) a[data-bg-option='raster'] {
+  :global(html[data-bg='raster']) a[data-bg-option='raster'],
+  :global(html[data-bg='riffel']) a[data-bg-option='riffel'] {
     background: var(--orange);
   }
 </style>

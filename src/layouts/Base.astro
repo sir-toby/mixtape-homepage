@@ -57,11 +57,11 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
     <slot name="head" />
     <script is:inline>
       document.documentElement.classList.add('js');
-      // Test backgrounds (temporary): ?hintergrund=punkte|raster, remembered while browsing, reset with ?hintergrund=weiss
+      // Test backgrounds (temporary): ?hintergrund=punkte|raster|riffel, remembered while browsing, reset with ?hintergrund=weiss
       try {
         const pick = new URLSearchParams(location.search).get('hintergrund');
         if (pick === 'weiss') localStorage.removeItem('mixtape-bg');
-        else if (pick === 'punkte' || pick === 'raster') localStorage.setItem('mixtape-bg', pick);
+        else if (['punkte', 'raster', 'riffel'].includes(pick)) localStorage.setItem('mixtape-bg', pick);
         const bg = localStorage.getItem('mixtape-bg');
         if (bg) document.documentElement.dataset.bg = bg;
         else if (pick === 'weiss') document.documentElement.dataset.bg = 'weiss';

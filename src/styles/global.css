@@ -56,6 +56,16 @@
   --pattern-size: auto;
 }
 
+/* Test background "Riffel": cool grey checker plate, stylised (raised lenses, alternating diagonals) */
+:root[data-bg='riffel'] {
+  --paper: #c4c9cf;
+  --paper-2: #b6bcc3;
+  --line: #16171b33;
+  --ink-soft: #2f343c;
+  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M-11 0Q0-3.8 11 0Q0 3.8-11 0Z' fill='%23a3aab2' transform='translate%2810.9 11.3%29 rotate%28-45%29'/%3E%3Cpath d='M-11 0Q0-3.8 11 0Q0 3.8-11 0Z' fill='%23d8dce1' transform='translate%2810 10%29 rotate%28-45%29'/%3E%3Cpath d='M-11 0Q0-3.8 11 0Q0 3.8-11 0Z' fill='%23a3aab2' transform='translate%2830.9 31.3%29 rotate%2845%29'/%3E%3Cpath d='M-11 0Q0-3.8 11 0Q0 3.8-11 0Z' fill='%23d8dce1' transform='translate%2830 30%29 rotate%2845%29'/%3E%3C/svg%3E");
+  --pattern-size: 40px 40px;
+}
+
 .surface,
 .surface-2 {
   background-color: var(--paper);
