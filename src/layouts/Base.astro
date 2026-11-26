@@ -44,7 +44,7 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
     <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
     <link rel="icon" href={icon32.src} type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href={icon180.src} />
-    <meta name="theme-color" content={theme === 'cream' ? '#f7f2e8' : '#ffffff'} />
+    <meta name="theme-color" content={theme === 'cream' ? '#f7f2e8' : '#e9e5df'} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_DE" />
     <meta property="og:site_name" content="Mixtape" />
@@ -57,14 +57,12 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
     <slot name="head" />
     <script is:inline>
       document.documentElement.classList.add('js');
-      // Test backgrounds (temporary): ?hintergrund=punkte|raster|riffel, remembered while browsing, reset with ?hintergrund=weiss
+      // Test (temporary): texture on the coloured blocks, ?flaechen=muster|glatt, remembered while browsing
       try {
-        const pick = new URLSearchParams(location.search).get('hintergrund');
-        if (pick === 'weiss') localStorage.removeItem('mixtape-bg');
-        else if (['punkte', 'raster', 'riffel'].includes(pick)) localStorage.setItem('mixtape-bg', pick);
-        const bg = localStorage.getItem('mixtape-bg');
-        if (bg) document.documentElement.dataset.bg = bg;
-        else if (pick === 'weiss') document.documentElement.dataset.bg = 'weiss';
+        const pick = new URLSearchParams(location.search).get('flaechen');
+        if (pick === 'muster' || pick === 'glatt') localStorage.setItem('mixtape-flaechen', pick);
+        const f = localStorage.getItem('mixtape-flaechen');
+        if (f) document.documentElement.dataset.flaechen = f;
       } catch {}
     </script>
   </head>

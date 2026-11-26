@@ -8,10 +8,10 @@
   --orange-deep: #d9430f;
   --ink: #16171b;
   --ink-soft: #3d434d;
-  --paper: #ffffff;
-  --paper-2: #eef2f5;
+  --paper: #e9e5df;
+  --paper-2: #dfd9d0;
   --card: #ffffff;
-  --line: #16171b1a;
+  --line: #16171b24;
   --tape: #4a3426;
 
   --font-display: 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif;
@@ -28,42 +28,18 @@
   color-scheme: light;
 }
 
-/* Background pattern: off by default, switched on by the test backgrounds below */
+/* Background: warm grey with a fine woven texture ("Raster") */
 :root {
-  --pattern: none;
-  --pattern-size: auto;
-  --pattern-pos: 0 0;
-}
-
-/* Test background "Punkte": warm grey with comic halftone dots (Ben-Day dots) */
-:root[data-bg='punkte'] {
-  --paper: #ebe7e1;
-  --paper-2: #e1dbd2;
-  --line: #16171b24;
-  --pattern: radial-gradient(#d3cbbf 1.3px, transparent 1.7px), radial-gradient(#d3cbbf 1.3px, transparent 1.7px);
-  --pattern-size: 10px 10px;
-  --pattern-pos: 0 0, 5px 5px;
-}
-
-/* Test background "Raster": warm grey with a fine woven texture */
-:root[data-bg='raster'] {
-  --paper: #e9e5df;
-  --paper-2: #dfd9d0;
-  --line: #16171b24;
   --pattern: repeating-linear-gradient(0deg, #16171b0d 0 1px, transparent 1px 4px),
     repeating-linear-gradient(90deg, #16171b0a 0 1px, transparent 1px 4px),
     repeating-linear-gradient(45deg, #ffffff33 0 1px, transparent 1px 6px);
   --pattern-size: auto;
+  --pattern-pos: 0 0;
 }
 
-/* Test background "Riffel": cool grey checker plate, stylised (raised lenses, alternating diagonals) */
-:root[data-bg='riffel'] {
-  --paper: #c4c9cf;
-  --paper-2: #b6bcc3;
-  --line: #16171b33;
-  --ink-soft: #2f343c;
-  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M-11 0Q0-3.8 11 0Q0 3.8-11 0Z' fill='%23a3aab2' transform='translate%2810.9 11.3%29 rotate%28-45%29'/%3E%3Cpath d='M-11 0Q0-3.8 11 0Q0 3.8-11 0Z' fill='%23d8dce1' transform='translate%2810 10%29 rotate%28-45%29'/%3E%3Cpath d='M-11 0Q0-3.8 11 0Q0 3.8-11 0Z' fill='%23a3aab2' transform='translate%2830.9 31.3%29 rotate%2845%29'/%3E%3Cpath d='M-11 0Q0-3.8 11 0Q0 3.8-11 0Z' fill='%23d8dce1' transform='translate%2830 30%29 rotate%2845%29'/%3E%3C/svg%3E");
-  --pattern-size: 40px 40px;
+/* Test (temporary): the same texture on the cyan and orange blocks, ?flaechen=muster */
+:root[data-flaechen='muster'] .tinted {
+  background-image: var(--pattern);
 }
 
 .surface,
@@ -78,8 +54,9 @@
   background-color: var(--paper-2);
 }
 
-/* First design draft (prototype A): warm cream paper */
+/* First design draft (prototype A): warm cream paper, no texture */
 :root[data-theme='cream'] {
+  --pattern: none;
   --paper: #f7f2e8;
   --paper-2: #efe7d7;
   --card: #fffdf8;

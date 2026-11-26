@@ -24,10 +24,10 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 - **Bildpfade im Frontmatter ab Projektwurzel** schreiben (`image: /src/assets/events/x.jpg`). Astro löst sie auf, und nur so findet das CMS die Bilder in seiner Medienbibliothek; relative Pfade (`../../assets/…`) sieht es nicht.
 - Markdown läuft über **Sätteri** (Astro-7-Standard), nicht remark/rehype. Plugins als Sätteri-HAST/MDAST-Plugins schreiben.
 - `/llms.txt` (Zusammenfassung für KI-Assistenten) wird beim Build aus den Inhalten erzeugt (`src/pages/llms.txt.ts`), nicht von Hand pflegen.
-- Test-Hintergründe (vorübergehend): `?hintergrund=punkte|raster|riffel|weiss` setzt `data-bg` auf `<html>` (Tokens in `global.css`, Umschalter `BgSwitcher.astro`). Flächen mit Muster nutzen die Klassen `surface`/`surface-2`.
+- Hintergrund: warmes Grau mit feinem Gewebe („Raster“, `--pattern` in `global.css`); Flächen mit Muster nutzen `surface`/`surface-2`. Test (vorübergehend): `?flaechen=muster|glatt` legt das Muster auch auf die cyan/orangen Blöcke (Klasse `tinted`), Umschalter `BgSwitcher.astro`.
 - `/kalender.ics` ist ein abonnierbarer Kalender mit allen Auftritten (`src/pages/kalender.ics.ts`), einzelne Termine gibt es unter `/events/<slug>.ics`.
 - Termine haben kein Zeitzonen-Problem: `date` ist ein Kalendertag, `start`/`end` sind Strings `HH:MM`. Vergangen/kommend entscheidet der Build (täglicher Cron-Build).
-- Farben/Schriften als CSS-Variablen in `src/styles/global.css`. Markenfarben aus dem Logo: Cyan `#19BFD1`, Orange `#FF5D25`, Grund Weiß (bewusst kein Creme).
+- Farben/Schriften als CSS-Variablen in `src/styles/global.css`. Markenfarben aus dem Logo: Cyan `#19BFD1`, Orange `#FF5D25`, Grund warmgrau mit Raster-Textur (bewusst kein einfarbiges Creme).
 - Kassetten-Stil statt Kassetten-Bild: `side-tag` („Side A/B“, Marker-Schrift), `stripe-band`, Spulen (`Reel`), `CassetteOutline` als blasse Hintergrundform, J-Card-Optik mit Rücken, ▶/●-Icons auf Buttons. Die ganze Kassette (`Cassette.astro`) nur sparsam einsetzen, nicht groß im Seitenkopf (Wunsch der Band).
 
 ## Entwickeln

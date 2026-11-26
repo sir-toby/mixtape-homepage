@@ -1,17 +1,15 @@
 ---
-// Temporary: lets the band compare test backgrounds on every page.
-// Visible only while a test background is active (?hintergrund=punkte|raster|riffel, back with ?hintergrund=weiss).
+// Temporary: compare the cyan/orange blocks with and without texture on every page.
+// Visible once ?flaechen=muster or ?flaechen=glatt has been used.
 const options = [
-  ['weiss', 'Weiß'],
-  ['punkte', 'Punkte'],
-  ['raster', 'Raster'],
-  ['riffel', 'Riffel'],
+  ['glatt', 'Glatt'],
+  ['muster', 'Mit Muster'],
 ];
 ---
 
-<div class="bg-switch" aria-label="Hintergrund testen">
-  <span class="mono">Hintergrund</span>
-  {options.map(([key, label]) => <a href={`?hintergrund=${key}`} data-bg-option={key}>{label}</a>)}
+<div class="bg-switch" aria-label="Farbflächen testen">
+  <span class="mono">Farbflächen</span>
+  {options.map(([key, label]) => <a href={`?flaechen=${key}`} data-bg-option={key}>{label}</a>)}
 </div>
 
 <style>
@@ -30,7 +28,7 @@ const options = [
     box-shadow: 0 6px 20px #0005;
     font-size: 0.85rem;
   }
-  :global(html[data-bg]) .bg-switch {
+  :global(html[data-flaechen]) .bg-switch {
     display: flex;
   }
   .mono {
@@ -47,9 +45,8 @@ const options = [
   a:hover {
     background: #ffffff22;
   }
-  :global(html[data-bg='punkte']) a[data-bg-option='punkte'],
-  :global(html[data-bg='raster']) a[data-bg-option='raster'],
-  :global(html[data-bg='riffel']) a[data-bg-option='riffel'] {
+  :global(html[data-flaechen='glatt']) a[data-bg-option='glatt'],
+  :global(html[data-flaechen='muster']) a[data-bg-option='muster'] {
     background: var(--orange);
   }
 </style>
