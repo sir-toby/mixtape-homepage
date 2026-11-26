@@ -13,7 +13,7 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 | `src/content.config.ts` | Schemas der Collections. Neue Felder hier **und** in `public/admin/config.yml` eintragen. |
 | `src/assets/` | Bilder, die Astro optimiert (Marke, Fotos, Event-Plakate, Porträts). |
 | `public/admin/` | Sveltia CMS (Konfiguration in `config.yml`). |
-| `src/pages/prototypen/` | Design-Prototypen B und C (noindex, nicht in der Sitemap). |
+| `src/pages/prototypen/` | Design-Prototypen A2, B und C (noindex, nicht in der Sitemap). A2 nutzt das Theme `data-theme="a2"` (Tokens in `global.css`) und die Komponente `Cassette.astro`. |
 | `.github/workflows/deploy.yml` | Build und Deploy, Ziel über die Repo-Variable `DEPLOY_TARGET`. |
 
 ## Regeln

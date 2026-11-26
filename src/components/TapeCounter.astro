@@ -1,0 +1,35 @@
+---
+// Mechanical tape counter, e.g. "016".
+interface Props {
+  value: number;
+  digits?: number;
+}
+const { value, digits = 3 } = Astro.props;
+const chars = String(value).padStart(digits, '0').split('');
+---
+
+<span class="counter" aria-label={String(value)}>
+  {chars.map((c) => <span class="digit" aria-hidden="true">{c}</span>)}
+</span>
+
+<style>
+  .counter {
+    display: inline-flex;
+    gap: 3px;
+    padding: 4px;
+    background: #2a2c33;
+    border-radius: 6px;
+    box-shadow: inset 0 2px 4px #0008;
+    vertical-align: middle;
+  }
+  .digit {
+    display: grid;
+    place-items: center;
+    width: 1.35em;
+    height: 1.7em;
+    background: linear-gradient(#111 0 48%, #000 52%);
+    color: #f4f4f4;
+    font: 700 0.95rem/1 var(--font-mono);
+    border-radius: 3px;
+  }
+</style>

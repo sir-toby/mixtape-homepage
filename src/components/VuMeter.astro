@@ -1,0 +1,68 @@
+---
+// Decorative VU meter (two channels), animated.
+const bars = Array.from({ length: 16 }, (_, i) => i);
+---
+
+<div class="vu" aria-hidden="true">
+  {
+    ['L', 'R'].map((ch, row) => (
+      <div class="row">
+        <span class="ch">{ch}</span>
+        <div class="bars" style={`--d:${row ? 1.1 : 0.9}s`}>
+          {bars.map((i) => (
+            <span class:list={['bar', { warm: i > 10, hot: i > 13 }]} style={`--i:${i}`} />
+          ))}
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .vu {
+    display: grid;
+    gap: 6px;
+    padding: 12px 14px;
+    background: #0d0e11;
+    border-radius: 10px;
+    border: 1px solid #ffffff14;
+    width: fit-content;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ch {
+    font: 700 0.65rem/1 var(--font-mono);
+    color: #8a8f99;
+  }
+  .bars {
+    display: flex;
+    gap: 3px;
+  }
+  .bar {
+    width: 9px;
+    height: 14px;
+    border-radius: 2px;
+    background: var(--cyan);
+    animation: level var(--d) ease-in-out infinite alternate;
+    animation-delay: calc(var(--i) * -97ms);
+  }
+  .warm {
+    background: #ffb020;
+  }
+  .hot {
+    background: var(--orange);
+  }
+  @keyframes level {
+    0%,
+    40% {
+      opacity: 1;
+    }
+    60%,
+    100% {
+      opacity: 0.15;
+    }
+  }
+</style>

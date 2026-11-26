@@ -26,6 +26,15 @@
   color-scheme: light;
 }
 
+/* Theme A2: clean white instead of cream, cool grey for alternating sections */
+:root[data-theme='a2'] {
+  --paper: #ffffff;
+  --paper-2: #eef2f5;
+  --card: #ffffff;
+  --line: #16171b1a;
+  --ink: #16171b;
+}
+
 *,
 *::before,
 *::after {

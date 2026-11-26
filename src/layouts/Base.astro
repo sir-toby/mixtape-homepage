@@ -17,9 +17,11 @@ interface Props {
   /** Bare page without site header/footer (used by the design prototypes). */
   bare?: boolean;
   noindex?: boolean;
+  /** Colour theme, see :root[data-theme] in global.css. */
+  theme?: 'a2';
 }
 
-const { title, description = 'Mixtape – A-cappella-Musik, die Spaß macht!', image = ogDefault, bare = false } = Astro.props;
+const { title, description = 'Mixtape – A-cappella-Musik, die Spaß macht!', image = ogDefault, bare = false, theme } = Astro.props;
 const fullTitle = title ? `${title} | Mixtape` : 'Mixtape – A-cappella-Musik, die Spaß macht!';
 const noindex = Astro.props.noindex || import.meta.env.PUBLIC_NOINDEX === '1';
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -29,7 +31,7 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
 ---
 
 <!doctype html>
-<html lang="de">
+<html lang="de" data-theme={theme}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -39,7 +41,7 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href={icon32.src} type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href={icon180.src} />
-    <meta name="theme-color" content="#f7f2e8" />
+    <meta name="theme-color" content={theme ? '#ffffff' : '#f7f2e8'} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_DE" />
     <meta property="og:site_name" content="Mixtape" />
