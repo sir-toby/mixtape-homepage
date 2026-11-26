@@ -184,7 +184,7 @@ const former = withContent.filter(({ m }) => m.data.former);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-block: 1.25rem;
+    padding: 1.25rem 0;
     background: var(--ink);
     color: #fff;
     border-left: 2px solid var(--ink);
@@ -251,9 +251,11 @@ const former = withContent.filter(({ m }) => m.data.former);
     margin: 0;
     border-left: 3px solid var(--ink);
   }
+  /* Equal padding above and below each entry: the line reaches as far above the
+     first dot as below the last, and each dot sits on the middle of its text. */
   .lineup li {
     position: relative;
-    padding: 0 0 1.75rem 1.75rem;
+    padding: 0.9rem 0 0.9rem 1.75rem;
     display: grid;
     gap: 0.2rem;
   }
@@ -261,7 +263,8 @@ const former = withContent.filter(({ m }) => m.data.former);
     content: '';
     position: absolute;
     left: -14px;
-    top: 0.2rem;
+    top: 50%;
+    translate: 0 -50%;
     width: 25px;
     height: 25px;
     border-radius: 50%;

@@ -1,7 +1,6 @@
 ---
-// Background shape for the hero areas: a faint cassette outline with two equally
-// sized reels in the positions of a real cassette. The parent positions it via `class`.
-import CassetteOutline from './CassetteOutline.astro';
+// Background shape for the hero areas: a faint cassette outline whose window holds
+// two equally sized reels, like a real cassette. The parent positions it via `class`.
 import Reel from './Reel.astro';
 
 interface Props {
@@ -11,7 +10,18 @@ const { class: className } = Astro.props;
 ---
 
 <div class:list={['tape-reels', className]} aria-hidden="true">
-  <CassetteOutline class="outline" />
+  <svg class="outline" viewBox="0 0 1000 640" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round">
+    <rect x="4" y="4" width="992" height="632" rx="40"></rect>
+    <!-- window around the reels: centres at (310, 300) and (690, 300), radius 170 -->
+    <rect x="110" y="100" width="780" height="400" rx="40"></rect>
+    <path d="M190 636 L240 530 H760 L810 636"></path>
+    <circle cx="330" cy="590" r="18"></circle>
+    <circle cx="670" cy="590" r="18"></circle>
+    <circle cx="40" cy="40" r="12"></circle>
+    <circle cx="960" cy="40" r="12"></circle>
+    <circle cx="40" cy="600" r="12"></circle>
+    <circle cx="960" cy="600" r="12"></circle>
+  </svg>
   <Reel class="reel left" size="34%" color="var(--cyan)" hub="#fff" speed="12s" />
   <Reel class="reel right" size="34%" color="var(--orange)" hub="#fff" speed="12s" />
 </div>
@@ -21,16 +31,17 @@ const { class: className } = Astro.props;
     aspect-ratio: 1000 / 640;
     transform: rotate(-6deg);
   }
-  .tape-reels :global(.outline) {
+  .outline {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    color: #16171b14;
+    color: #16171b1f;
   }
+  /* Positions match the window in the SVG above (percent of 1000 × 640). */
   .tape-reels :global(.reel) {
     position: absolute;
-    top: 47%;
+    top: calc(300 / 640 * 100%);
     translate: -50% -50%;
   }
   .tape-reels :global(.left) {
