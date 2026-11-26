@@ -70,8 +70,8 @@ const headline = esc(home.data.tagline ?? '')
       {
         later.length > 0 && (
           <ol class="tracklist">
-            {later.map((e, i) => (
-              <EventTrack event={e} index={i + 2} />
+            {later.map((e) => (
+              <EventTrack event={e} />
             ))}
           </ol>
         )

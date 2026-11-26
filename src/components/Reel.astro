@@ -5,12 +5,14 @@ interface Props {
   color?: string;
   hub?: string;
   speed?: string;
+  /** No rotation, e.g. for small decorative uses in lists. */
+  still?: boolean;
   class?: string;
 }
-const { size = 120, color = 'var(--cyan)', hub = 'var(--paper)', speed = '9s', class: className } = Astro.props;
+const { size = 120, color = 'var(--cyan)', hub = 'var(--paper)', speed = '9s', still = false, class: className } = Astro.props;
 ---
 
-<svg class:list={['reel', className]} viewBox="0 0 100 100" width={size} height={size} aria-hidden="true" style={`--speed:${speed}`}>
+<svg class:list={['reel', { still }, className]} viewBox="0 0 100 100" width={size} height={size} aria-hidden="true" style={`--speed:${speed}`}>
   <circle cx="50" cy="50" r="48" fill={color}></circle>
   <circle cx="50" cy="50" r="20" fill={hub}></circle>
   {
@@ -22,7 +24,7 @@ const { size = 120, color = 'var(--cyan)', hub = 'var(--paper)', speed = '9s', c
 </svg>
 
 <style>
-  .reel {
+  .reel:not(.still) {
     animation: spin var(--speed) linear infinite;
   }
   @keyframes spin {
