@@ -1,0 +1,57 @@
+---
+// Buttons to subscribe to all appearances (webcal feed, Google Calendar) or copy the feed URL.
+import Icon from './Icon.astro';
+
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+const feed = new URL(`${import.meta.env.BASE_URL}kalender.ics`, Astro.site);
+const webcal = feed.toString().replace(/^https?:/, 'webcal:');
+const google = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal)}`;
+---
+
+<div class:list={['subscribe', { compact }]}>
+  {
+    !compact && (
+      <p>
+        <strong>Unsere Auftritte im eigenen Kalender:</strong> Abonniert den Mixtape-Kalender, dann erscheinen neue Termine automatisch bei euch.
+      </p>
+    )
+  }
+  <div class="buttons">
+    <a class="btn btn--cyan" href={webcal}><Icon name="calendar" size={18} /> Kalender abonnieren</a>
+    <a class="btn btn--ghost" href={google} target="_blank" rel="noopener">Google Kalender</a>
+    <button class="btn btn--ghost copy" type="button" data-url={feed.toString()}>Link kopieren</button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.subscribe .copy').forEach((b) =>
+    b.addEventListener('click', async () => {
+      const label = b.textContent;
+      try {
+        await navigator.clipboard.writeText(b.dataset.url!);
+        b.textContent = 'Kopiert ✓';
+      } catch {
+        prompt('Kalender-Link:', b.dataset.url);
+      }
+      setTimeout(() => (b.textContent = label), 2000);
+    }),
+  );
+</script>
+
+<style>
+  .subscribe p {
+    margin-bottom: 1rem;
+  }
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .compact .btn {
+    padding: 0.6em 1.1em;
+    font-size: 0.9rem;
+  }
+</style>

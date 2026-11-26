@@ -40,29 +40,91 @@ export function formatTime(e: Event): string {
   return end ? `${start} – ${end} Uhr` : `${start} Uhr`;
 }
 
-/** Calendar file (.ics) contents for one event. */
-export function toIcs(e: Event, siteUrl: string): string {
+// Europe/Berlin with the EU daylight-saving rules, so every calendar app reads the times right.
+const VTIMEZONE = [
+  'BEGIN:VTIMEZONE',
+  `TZID:${TZ}`,
+  'BEGIN:DAYLIGHT',
+  'TZOFFSETFROM:+0100',
+  'TZOFFSETTO:+0200',
+  'TZNAME:CEST',
+  'DTSTART:19700329T020000',
+  'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
+  'END:DAYLIGHT',
+  'BEGIN:STANDARD',
+  'TZOFFSETFROM:+0200',
+  'TZOFFSETTO:+0100',
+  'TZNAME:CET',
+  'DTSTART:19701025T030000',
+  'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
+  'END:STANDARD',
+  'END:VTIMEZONE',
+];
+
+/** iCalendar lines may be at most 75 octets; longer ones continue on the next line after a space. */
+function fold(line: string): string {
+  const bytes = new TextEncoder().encode(line);
+  if (bytes.length <= 75) return line;
+  const parts: string[] = [];
+  let current = '';
+  for (const ch of line) {
+    const limit = parts.length ? 74 : 75;
+    if (new TextEncoder().encode(current + ch).length > limit) {
+      parts.push(current);
+      current = ch;
+    } else current += ch;
+  }
+  parts.push(current);
+  return parts.join('\r\n ');
+}
+
+const escIcs = (s: string) => s.replace(/([,;\\])/g, '\\$1').replace(/\r?\n/g, '\\n');
+
+/** Markdown body as plain text: links become "text (url)", formatting marks are dropped. */
+function plainText(md: string | undefined): string {
+  return (md ?? '')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, href) => (text === href ? href : `${text} (${href})`))
+    .replace(/[*_`#>]/g, '')
+    .trim();
+}
+
+function vevent(e: Event, pageUrl: string): string[] {
   const day = isoDay(e.data.date).replaceAll('-', '');
   const t = (hhmm: string) => `${day}T${hhmm.replace(':', '')}00`;
-  const esc = (s: string) => s.replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
   const next = new Date(e.data.date.getTime() + 86400000);
-  const lines = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Mixtape//mixtape-vocal.de//DE',
+  const description = [plainText(e.body), pageUrl].filter(Boolean).join('\n\n');
+  return [
     'BEGIN:VEVENT',
     `UID:${e.id}@mixtape-vocal.de`,
     `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
     ...(e.data.start
       ? [`DTSTART;TZID=${TZ}:${t(e.data.start)}`, `DTEND;TZID=${TZ}:${t(e.data.end ?? e.data.start)}`]
       : [`DTSTART;VALUE=DATE:${day}`, `DTEND;VALUE=DATE:${isoDay(next).replaceAll('-', '')}`]),
-    `SUMMARY:${esc(`Mixtape: ${e.data.title}`)}`,
-    ...(e.data.location ? [`LOCATION:${esc([e.data.location, e.data.address].filter(Boolean).join(', '))}`] : []),
-    `URL:${siteUrl}`,
+    `SUMMARY:${escIcs(`Mixtape: ${e.data.title}`)}`,
+    ...(e.data.location ? [`LOCATION:${escIcs([e.data.location, e.data.address].filter(Boolean).join(', '))}`] : []),
+    `DESCRIPTION:${escIcs(description)}`,
+    `URL:${pageUrl}`,
     'END:VEVENT',
+  ];
+}
+
+/**
+ * Calendar file with one or more events. With `name` it is a subscribable feed:
+ * calendar apps show that name and re-fetch it twice a day.
+ */
+export function toIcs(events: Event[], pageUrl: (e: Event) => string, name?: string): string {
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Mixtape//mixtape-vocal.de//DE',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    ...(name ? [`X-WR-CALNAME:${escIcs(name)}`, `X-WR-TIMEZONE:${TZ}`, 'REFRESH-INTERVAL;VALUE=DURATION:PT12H', 'X-PUBLISHED-TTL:PT12H'] : []),
+    ...VTIMEZONE,
+    ...events.flatMap((e) => vevent(e, pageUrl(e))),
     'END:VCALENDAR',
   ];
-  return lines.join('\r\n') + '\r\n';
+  return lines.map(fold).join('\r\n') + '\r\n';
 }
 
 export function mapsUrl(e: Event): string | undefined {

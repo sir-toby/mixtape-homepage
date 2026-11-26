@@ -5,6 +5,9 @@ import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Cassette from '../../components/Cassette.astro';
+import CassetteOutline from '../../components/CassetteOutline.astro';
+import Reel from '../../components/Reel.astro';
+import CalendarSubscribe from '../../components/CalendarSubscribe.astro';
 import Marquee from '../../components/Marquee.astro';
 import Icon from '../../components/Icon.astro';
 import NextEvent from '../../components/NextEvent.astro';
@@ -13,7 +16,6 @@ import NewsletterForm from '../../components/NewsletterForm.astro';
 import TapeCounter from '../../components/TapeCounter.astro';
 import VuMeter from '../../components/VuMeter.astro';
 import groupCutout from '../../assets/brand/group-cutout-wide.png';
-import logo from '../../assets/brand/logo.png';
 import livePhoto from '../../assets/photos/bardentreffen-2026-stage.jpg';
 import settings from '../../data/settings.json';
 import { getHomeData } from '../../lib/home-data';
@@ -32,31 +34,27 @@ const headline = esc(home.data.tagline ?? '')
 
 <Base description={home.data.description} theme="a2" noindex>
   <section class="hero">
-    <div class="stripes-bg" aria-hidden="true"><span></span><span></span><span></span></div>
     <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <span class="label">Vocalband · A cappella</span>
-        <h1 set:html={headline} />
-        <p class="lead">Seit 2022 singen wir gemeinsam Pop, Jazz, Rock und Singer/Songwriter.</p>
-        <div class="hero-cta">
-          <a class="btn btn--orange" href="#termine"><Icon name="play" size={16} /> Nächste Termine</a>
-          <a class="btn btn--ghost rec" href={`mailto:${settings.email}`}><Icon name="rec" size={14} /> Mixtape buchen</a>
-        </div>
+      <span class="label hero-label">Vocalband · A cappella</span>
+      <h1 class="hero-title" set:html={headline} />
+      <p class="lead">Seit 2022 singen wir gemeinsam Pop, Jazz, Rock und Singer/Songwriter.</p>
+      <div class="hero-cta">
+        <a class="btn btn--orange" href="#termine"><Icon name="play" size={16} /> Nächste Termine</a>
+        <a class="btn btn--ghost rec" href={`mailto:${settings.email}`}><Icon name="rec" size={14} /> Mixtape buchen</a>
       </div>
       <div class="hero-visual">
+        <CassetteOutline class="bg-tape" />
+        <Reel class="reel-cyan" size="58%" color="var(--cyan)" hub="#fff" speed="14s" />
+        <Reel class="reel-orange" size="34%" color="var(--orange)" hub="#fff" speed="10s" />
         <Image
           src={groupCutout}
-          alt="Die Mitglieder von Mixtape sitzen lachend auf einer riesigen Kassette"
+          alt="Die Mitglieder von Mixtape sitzen lachend auf dem Boden, mit Kassetten und einem großen M"
           widths={[640, 960, 1491]}
           sizes="(max-width: 900px) 100vw, 55vw"
           loading="eager"
           fetchpriority="high"
           class="cutout"
         />
-        <Cassette interactive class="hero-tape">
-          <Image src={logo} alt="" width={260} densities={[1, 2]} class="tape-logo" loading="eager" />
-        </Cassette>
-        <span class="note marker" aria-hidden="true">Vol. 2026 ↺</span>
       </div>
     </div>
   </section>
@@ -83,6 +81,7 @@ const headline = esc(home.data.tagline ?? '')
       <a class="more" href={url('/events/')}>
         Alle Termine · <TapeCounter value={past.length} /> bisherige Auftritte <Icon name="arrow" size={18} />
       </a>
+      <div class="subscribe-row"><CalendarSubscribe compact /></div>
     </div>
   </section>
 
@@ -215,50 +214,40 @@ const headline = esc(home.data.tagline ?? '')
   .hero {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(2rem, 5vw, 4rem) clamp(2.5rem, 5vw, 4rem);
-  }
-  .stripes-bg {
-    position: absolute;
-    right: -15%;
-    bottom: 14%;
-    width: 80%;
-    display: grid;
-    gap: 10px;
-    transform: rotate(-9deg);
-    transform-origin: right;
-  }
-  .stripes-bg span {
-    height: clamp(22px, 3vw, 40px);
-    background: var(--orange);
-  }
-  .stripes-bg span:nth-child(2) {
-    background: var(--cyan);
-  }
-  .stripes-bg span:nth-child(3) {
-    background: var(--ink);
+    padding-block: clamp(1.5rem, 4vw, 3.5rem) clamp(2.5rem, 5vw, 4rem);
   }
   .hero-grid {
-    position: relative;
     display: grid;
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-    align-items: center;
-    gap: 2rem;
+    grid-template-rows: 1fr auto auto auto auto 1fr;
+    grid-template-areas:
+      '. visual'
+      'label visual'
+      'title visual'
+      'lead visual'
+      'cta visual'
+      '. visual';
+    column-gap: 2rem;
   }
-  h1 {
+  .hero-label {
+    grid-area: label;
+  }
+  .hero-title {
+    grid-area: title;
     font-size: clamp(3.4rem, 1.6rem + 5.6vw, 7rem);
     line-height: 0.88;
     margin: 1.25rem 0 1.5rem;
   }
-  h1 :global(.nw) {
+  .hero-title :global(.nw) {
     white-space: nowrap;
   }
-  h1 :global(mark) {
+  .hero-title :global(mark) {
     background: none;
     color: var(--orange);
     position: relative;
     white-space: nowrap;
   }
-  h1 :global(mark)::after {
+  .hero-title :global(mark)::after {
     content: '';
     position: absolute;
     left: -0.04em;
@@ -270,53 +259,52 @@ const headline = esc(home.data.tagline ?? '')
     z-index: -1;
   }
   .lead {
+    grid-area: lead;
     font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
     max-width: 30ch;
     color: var(--ink-soft);
   }
   .hero-cta {
+    grid-area: cta;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
   }
   .rec :global(svg) {
     color: var(--orange);
   }
   .hero-visual {
+    grid-area: visual;
     position: relative;
-    padding-inline: 4%;
+    aspect-ratio: 1491 / 1060;
+    align-self: center;
+  }
+  .hero-visual :global(.bg-tape) {
+    position: absolute;
+    left: -6%;
+    top: 2%;
+    width: 112%;
+    height: auto;
+    color: #16171b14;
+    transform: rotate(-6deg);
+  }
+  .hero-visual :global(.reel-cyan) {
+    position: absolute;
+    right: 6%;
+    top: 0;
+  }
+  .hero-visual :global(.reel-orange) {
+    position: absolute;
+    left: 4%;
+    top: 14%;
   }
   .cutout {
-    position: relative;
-    z-index: 2;
-    display: block;
+    position: absolute;
+    inset: auto 0 0 0;
     width: 100%;
     height: auto;
-    margin-bottom: -9%;
-    filter: drop-shadow(0 10px 12px #16171b33);
-  }
-  .hero-visual :global(.hero-tape) {
-    position: relative;
-    z-index: 1;
-  }
-  .hero-visual :global(.tape-logo) {
-    height: 7cqw;
-    width: auto;
-    margin: 0 auto 0.6cqw;
-  }
-  .note {
-    position: absolute;
-    z-index: 3;
-    right: 5%;
-    bottom: -0.5rem;
-    font-size: clamp(1rem, 0.8rem + 0.8vw, 1.5rem);
-    color: var(--ink);
-    background: #fff;
-    padding: 0.1em 0.5em;
-    transform: rotate(-6deg);
-    box-shadow: 2px 3px 0 var(--ink);
-    border: 2px solid var(--ink);
+    filter: drop-shadow(0 18px 24px #16171b33);
   }
 
   .stripe-band {
@@ -341,6 +329,9 @@ const headline = esc(home.data.tagline ?? '')
   }
   .more:hover {
     color: var(--orange-deep);
+  }
+  .subscribe-row {
+    margin-top: 1.25rem;
   }
 
   /* Welcome */
@@ -629,7 +620,18 @@ const headline = esc(home.data.tagline ?? '')
   }
 
   @media (max-width: 900px) {
-    .hero-grid,
+    /* Phone: picture and headline first, then the buttons */
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto;
+      grid-template-areas: 'label' 'visual' 'title' 'lead' 'cta';
+    }
+    .hero-visual {
+      margin-top: 1rem;
+    }
+    .hero-title {
+      margin-top: 0.5rem;
+    }
     .welcome-grid,
     .booking-grid,
     .deck-grid {
@@ -644,9 +646,6 @@ const headline = esc(home.data.tagline ?? '')
     }
     .booking-tape {
       max-width: 420px;
-    }
-    .stripes-bg {
-      bottom: 6%;
     }
   }
 </style>

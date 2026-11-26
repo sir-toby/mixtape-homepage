@@ -1,0 +1,23 @@
+---
+// Line drawing of a cassette, meant as a quiet background shape.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg class={className} viewBox="0 0 1000 640" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" aria-hidden="true">
+  <rect x="4" y="4" width="992" height="632" rx="40"></rect>
+  <rect x="70" y="56" width="860" height="404" rx="20"></rect>
+  <path d="M70 384 H930 M70 432 H930"></path>
+  <rect x="290" y="250" width="420" height="140" rx="20"></rect>
+  <circle cx="390" cy="320" r="40"></circle>
+  <circle cx="610" cy="320" r="40"></circle>
+  <path d="M190 636 L240 500 H760 L810 636"></path>
+  <circle cx="330" cy="585" r="20"></circle>
+  <circle cx="670" cy="585" r="20"></circle>
+  <circle cx="40" cy="40" r="12"></circle>
+  <circle cx="960" cy="40" r="12"></circle>
+  <circle cx="40" cy="600" r="12"></circle>
+  <circle cx="960" cy="600" r="12"></circle>
+</svg>

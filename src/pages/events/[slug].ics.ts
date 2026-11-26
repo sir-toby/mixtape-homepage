@@ -9,7 +9,7 @@ export const getStaticPaths = (async () => {
 export const GET: APIRoute = ({ props, site }) => {
   const event = props.event as Event;
   const page = new URL(`${import.meta.env.BASE_URL}events/${event.id}/`, site);
-  return new Response(toIcs(event, page.toString()), {
+  return new Response(toIcs([event], () => page.toString()), {
     headers: { 'Content-Type': 'text/calendar; charset=utf-8' },
   });
 };
