@@ -31,8 +31,7 @@
 /* Background: warm grey with a fine woven texture ("Raster") */
 :root {
   --pattern: repeating-linear-gradient(0deg, #16171b0d 0 1px, transparent 1px 4px),
-    repeating-linear-gradient(90deg, #16171b0a 0 1px, transparent 1px 4px),
-    repeating-linear-gradient(45deg, #ffffff33 0 1px, transparent 1px 6px);
+    repeating-linear-gradient(90deg, #16171b0a 0 1px, transparent 1px 4px);
   --pattern-size: auto;
   --pattern-pos: 0 0;
 }
