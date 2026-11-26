@@ -142,16 +142,17 @@ const headline = esc(home.data.tagline ?? '')
 
   <section class="booking tinted on-bright">
     <div class="wrap booking-grid">
+      
+      <div class="booking-tape">
+        <Cassette shell="#ffffff" label="var(--ink)" side="B" type="C90">
+          <span class="light-writing">Eure Feier</span>
+        </Cassette>
+      </div>
       <div>
         <span class="rec-light mono"><span class="dot"></span> Rec</span>
         <h2>Mixtape live bei euch</h2>
         <p class="booking-text">{home.data.bookingText}</p>
         <a class="btn" href={`mailto:${settings.email}`}><Icon name="mail" size={18} /> {home.data.bookingButton}</a>
-      </div>
-      <div class="booking-tape">
-        <Cassette shell="#ffffff" label="var(--ink)" side="B" type="C90">
-          <span class="light-writing">Eure Feier</span>
-        </Cassette>
       </div>
     </div>
   </section>
@@ -216,7 +217,7 @@ const headline = esc(home.data.tagline ?? '')
   .hero-title {
     grid-area: title;
     font-size: clamp(3.4rem, 1.6rem + 5.6vw, 7rem);
-    line-height: 0.88;
+    line-height: 1;
     margin: 1.25rem 0 1.5rem;
   }
   .hero-title :global(.nw) {
