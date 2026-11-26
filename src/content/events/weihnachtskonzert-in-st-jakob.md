@@ -5,7 +5,7 @@ start: '19:00'
 end: '20:15'
 location: Kirche St. Jakob
 address: Jakobsplatz 1, Nürnberg
-image: /src/assets/events/weihnachtszeitlos-2026.jpg
+image: /src/assets/events/image-20261027-151710-300.jpeg
 imageAlt: Plakat „WeihnachtsZeitLos – A cappella Konzert“ mit goldener Uhr vor Tannenzweigen
 private: false
 draft: false
