@@ -11,7 +11,7 @@ interface Props {
 const { label, title, intro, tone = 'paper' } = Astro.props;
 ---
 
-<section class:list={['page-hero', tone]}>
+<section class:list={['page-hero', tone, { 'on-bright': tone !== 'paper' }]}>
   <CassetteOutline class="shape" />
   <div class="wrap inner">
     <span class="side-tag">{label}</span>
@@ -36,7 +36,7 @@ const { label, title, intro, tone = 'paper' } = Astro.props;
     top: 50%;
     width: min(620px, 70vw);
     height: auto;
-    color: #16171b14;
+    color: var(--outline-shape);
     transform: translateY(-50%) rotate(-8deg);
   }
   .cyan {

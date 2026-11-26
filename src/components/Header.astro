@@ -1,5 +1,6 @@
 ---
 import Logo from '../assets/brand/logo.svg';
+import LogoLight from '../assets/brand/logo-light.svg';
 import settings from '../data/settings.json';
 import Icon from './Icon.astro';
 import { url } from '../lib/url';
@@ -15,7 +16,8 @@ const current = Astro.url.pathname;
 <header class="site-header">
   <div class="wrap bar">
     <a href={url('/')} class="brand" aria-label="Mixtape – Startseite">
-      <Logo class="logo" aria-hidden="true" />
+      <Logo class="logo logo-for-light" aria-hidden="true" />
+      <LogoLight class="logo logo-for-dark" aria-hidden="true" />
     </a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav">
       <Icon name="menu" size={26} class="i-open" />
@@ -35,6 +37,10 @@ const current = Astro.url.pathname;
         }
       </ul>
       <div class="actions">
+        <button class="icon-link mode-toggle" type="button" aria-label="Dunkles Design ein/aus" title="Hell / Dunkel">
+          <Icon name="moon" size={21} class="i-to-dark" />
+          <Icon name="sun" size={22} class="i-to-light" />
+        </button>
         <a class="icon-link" href={settings.instagram} target="_blank" rel="noopener" aria-label="Mixtape auf Instagram">
           <Icon name="instagram" size={22} />
         </a>
@@ -51,6 +57,14 @@ const current = Astro.url.pathname;
     const open = toggle.getAttribute('aria-expanded') !== 'true';
     toggle.setAttribute('aria-expanded', String(open));
     header.classList.toggle('is-open', open);
+  });
+  header.querySelector('.mode-toggle')!.addEventListener('click', () => {
+    const root = document.documentElement;
+    const next = root.dataset.mode === 'dark' ? 'light' : 'dark';
+    root.dataset.mode = next;
+    try {
+      localStorage.setItem('mixtape-mode', next);
+    } catch {}
   });
   const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
   onScroll();
@@ -133,6 +147,24 @@ const current = Astro.url.pathname;
     height: 44px;
     border-radius: 50%;
     transition: background 0.2s;
+  }
+  .mode-toggle {
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  .mode-toggle :global(.i-to-light),
+  .brand :global(.logo-for-dark) {
+    display: none;
+  }
+  :global(html[data-mode='dark']) .mode-toggle :global(.i-to-light),
+  :global(html[data-mode='dark']) .brand :global(.logo-for-dark) {
+    display: block;
+  }
+  :global(html[data-mode='dark']) .mode-toggle :global(.i-to-dark),
+  :global(html[data-mode='dark']) .brand :global(.logo-for-light) {
+    display: none;
   }
   .icon-link:hover {
     background: var(--paper-2);

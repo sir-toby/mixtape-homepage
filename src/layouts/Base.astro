@@ -43,7 +43,8 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
     <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
     <link rel="icon" href={icon32.src} type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href={icon180.src} />
-    <meta name="theme-color" content={theme === 'cream' ? '#f7f2e8' : '#e9e5df'} />
+    <meta name="theme-color" content={theme === 'cream' ? '#f7f2e8' : '#e9e5df'} media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#222327" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_DE" />
     <meta property="og:site_name" content="Mixtape" />
@@ -55,7 +56,26 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
     <link rel="alternate" type="text/plain" title="Zusammenfassung für KI-Assistenten" href={`${import.meta.env.BASE_URL}llms.txt`} />
     <slot name="head" />
     <script is:inline>
-      document.documentElement.classList.add('js');
+      (() => {
+        const root = document.documentElement;
+        root.classList.add('js');
+        // Dark mode: the visitor's choice (toggle in the header), otherwise the system setting.
+        // The cream prototype has no dark variant.
+        if (root.dataset.theme) return;
+        const media = matchMedia('(prefers-color-scheme: dark)');
+        let saved = null;
+        try {
+          saved = localStorage.getItem('mixtape-mode');
+        } catch {}
+        root.dataset.mode = saved || (media.matches ? 'dark' : 'light');
+        media.addEventListener('change', (e) => {
+          let s = null;
+          try {
+            s = localStorage.getItem('mixtape-mode');
+          } catch {}
+          if (!s) root.dataset.mode = e.matches ? 'dark' : 'light';
+        });
+      })();
     </script>
   </head>
   <body class:list={[{ bare }]}>

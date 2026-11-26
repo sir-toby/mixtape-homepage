@@ -28,6 +28,7 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 - `/kalender.ics` ist ein abonnierbarer Kalender mit allen Auftritten (`src/pages/kalender.ics.ts`), einzelne Termine gibt es unter `/events/<slug>.ics`.
 - Termine haben kein Zeitzonen-Problem: `date` ist ein Kalendertag, `start`/`end` sind Strings `HH:MM`. Vergangen/kommend entscheidet der Build (täglicher Cron-Build).
 - Farben/Schriften als CSS-Variablen in `src/styles/global.css`. Markenfarben aus dem Logo: Cyan `#19BFD1`, Orange `#FF5D25`, Grund warmgrau mit Raster-Textur (bewusst kein einfarbiges Creme).
+- **Dark Mode** über `data-mode="dark"` auf `<html>` (Systemeinstellung, Umschalter im Header, gespeichert in `localStorage`). Farben nur über Variablen: `--ink` (Text), `--edge` (Ränder/Versatzschatten von Karten), `--dark` (Flächen, die immer dunkel bleiben: Footer, Laufband, Kassettenrücken), `--card`, `--deck`. Cyan/orange Blöcke bekommen die Klasse `on-bright` (dunkle Schrift, weiße Karten in beiden Modi). Keine festen `#fff`/`#16171b` für Flächen einbauen.
 - Kassetten-Stil statt Kassetten-Bild: `side-tag` („Side A/B“, Marker-Schrift), `stripe-band`, Spulen (`Reel`), `CassetteOutline` als blasse Hintergrundform, J-Card-Optik mit Rücken, ▶/●-Icons auf Buttons. Die ganze Kassette (`Cassette.astro`) nur sparsam einsetzen, nicht groß im Seitenkopf (Wunsch der Band).
 
 ## Entwickeln

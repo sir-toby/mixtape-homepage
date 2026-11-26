@@ -13,6 +13,14 @@
   --card: #ffffff;
   --line: #16171b24;
   --tape: #4a3426;
+  /* Lines and hard offset shadows of cards (cassette-cover look) */
+  --edge: #16171b;
+  /* Surfaces that stay dark in both modes: footer, marquee, cassette spines, chips */
+  --dark: #16171b;
+  --on-dark: #f3f1ec;
+  --deck: #23252c;
+  --outline-shape: #16171b1f;
+  --photo-frame: #ffffff;
 
   --font-display: "Big Shoulders Display Variable", "Arial Narrow", sans-serif;
   --font-body: "Outfit Variable", system-ui, sans-serif;
@@ -50,6 +58,37 @@
 
 .surface-2 {
   background-color: var(--paper-2);
+}
+
+/* Dark mode: set as data-mode="dark" on <html> by the script in Base.astro
+   (follows the system setting unless the visitor picked a mode with the toggle). */
+:root[data-mode='dark'] {
+  color-scheme: dark;
+  --ink: #efece6;
+  --ink-soft: #b8b4ad;
+  --paper: #222327;
+  --paper-2: #1a1b1e;
+  --card: #2d2f34;
+  --line: #ffffff1f;
+  --edge: #0a0a0c;
+  --dark: #0f1012;
+  --deck: #141518;
+  --outline-shape: #ffffff1a;
+  --photo-frame: #e8e5df;
+  --cyan-deep: #4fd3e2;
+  --orange-deep: #ff8a5c;
+  --shadow: 0 1px 0 #0003, 0 12px 32px -12px #000a;
+  --pattern: repeating-linear-gradient(0deg, #ffffff06 0 2px, transparent 1px 12px), repeating-linear-gradient(90deg, #ffffff06 0 2px, transparent 1px 12px);
+}
+
+/* Bright blocks (cyan, orange) and objects like the drawn cassette keep dark text in both modes */
+.on-bright {
+  --ink: #16171b;
+  --ink-soft: #2f343c;
+  --line: #16171b33;
+  --paper: #f3f1ec;
+  --card: #ffffff;
+  color: var(--ink);
 }
 
 /* First design draft (prototype A): warm cream paper, no texture */
@@ -183,7 +222,7 @@ p {
 
 .btn--cyan {
   --bg: var(--cyan);
-  --fg: var(--ink);
+  --fg: #16171b;
 }
 
 .btn--ghost {
@@ -233,7 +272,7 @@ p {
 
 .stripe-band {
   height: 30px;
-  background: linear-gradient(to bottom, var(--orange) 0 33.3%, var(--cyan) 33.3% 66.6%, var(--ink) 66.6%);
+  background: linear-gradient(to bottom, var(--orange) 0 33.3%, var(--cyan) 33.3% 66.6%, var(--dark) 66.6%);
 }
 
 .btn .i-rec {
