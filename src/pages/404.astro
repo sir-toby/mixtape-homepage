@@ -1,16 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
-import Reel from '../components/Reel.astro';
+import Cassette from '../components/Cassette.astro';
 import { url } from '../lib/url';
 ---
 
 <Base title="Seite nicht gefunden" noindex>
   <section class="wrap lost">
-    <div class="reels" aria-hidden="true">
-      <Reel size={120} color="var(--cyan)" hub="var(--paper)" speed="2s" />
-      <span class="tape"></span>
-      <Reel size={120} color="var(--orange)" hub="var(--paper)" speed="2s" />
-    </div>
+    <div class="tape" aria-hidden="true"><Cassette side="?" type="404">Track nicht gefunden</Cassette></div>
     <h1>Bandsalat!</h1>
     <p>Diese Seite gibt es nicht (mehr). Spult einfach zurück zum Anfang.</p>
     <a class="btn btn--orange" href={url('/')}>Zur Startseite</a>
@@ -26,16 +22,10 @@ import { url } from '../lib/url';
     align-items: center;
     gap: 1rem;
   }
-  .reels {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
   .tape {
-    width: 80px;
-    height: 0;
-    border-top: 6px wavy var(--ink);
-    border-top-style: solid;
+    width: min(360px, 80vw);
+    margin-bottom: 1.5rem;
+    transform: rotate(-6deg);
   }
   h1 {
     font-size: clamp(4rem, 2rem + 8vw, 9rem);

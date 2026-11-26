@@ -1,29 +1,29 @@
 ---
 import { Image } from 'astro:assets';
-import { getCollection, getEntry, render } from 'astro:content';
+import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import Cassette from '../components/Cassette.astro';
+import CassetteOutline from '../components/CassetteOutline.astro';
 import Reel from '../components/Reel.astro';
+import CalendarSubscribe from '../components/CalendarSubscribe.astro';
 import Marquee from '../components/Marquee.astro';
 import Icon from '../components/Icon.astro';
 import NextEvent from '../components/NextEvent.astro';
 import EventTrack from '../components/EventTrack.astro';
 import NewsletterForm from '../components/NewsletterForm.astro';
+import TapeCounter from '../components/TapeCounter.astro';
+import VuMeter from '../components/VuMeter.astro';
 import groupCutout from '../assets/brand/group-cutout-wide.png';
 import livePhoto from '../assets/photos/bardentreffen-2026-stage.jpg';
 import settings from '../data/settings.json';
-import { getEvents } from '../lib/events';
+import { getHomeData } from '../lib/home-data';
 import { url } from '../lib/url';
 
-const home = (await getEntry('pages', 'home'))!;
-const newsletter = (await getEntry('pages', 'newsletter'))!;
+const { home, newsletter, upcoming, past, members } = await getHomeData();
 const { Content: Welcome } = await render(home);
 const { Content: NewsletterIntro } = await render(newsletter);
-
-const { upcoming, past } = await getEvents();
 const [next, ...later] = upcoming;
-const members = (await getCollection('members', ({ data }) => !data.former)).sort((a, b) => a.data.order - b.data.order);
 
-// Hero headline: keep "A-cappella-" together and give "Spaß" the highlighter treatment.
 const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 const headline = esc(home.data.tagline ?? '')
   .replace(/(A-cappella-)/, '<span class="nw">$1</span>')
@@ -31,21 +31,19 @@ const headline = esc(home.data.tagline ?? '')
 ---
 
 <Base description={home.data.description}>
-  <section class="hero grain">
+  <section class="hero">
     <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <span class="label">Vocalband · A cappella</span>
-        <h1 set:html={headline} />
-        <p class="lead">Seit 2022 singen wir gemeinsam Pop, Jazz, Rock und Singer/Songwriter.</p>
-        <div class="hero-cta">
-          <a class="btn btn--orange" href="#termine">Nächste Termine <Icon name="arrow" size={18} /></a>
-          <a class="btn btn--ghost" href={`mailto:${settings.email}`}>Mixtape buchen</a>
-        </div>
+      <span class="label hero-label">Vocalband · A cappella</span>
+      <h1 class="hero-title" set:html={headline} />
+      <p class="lead">Seit 2022 singen wir gemeinsam Pop, Jazz, Rock und Singer/Songwriter.</p>
+      <div class="hero-cta">
+        <a class="btn btn--orange" href="#termine"><Icon name="play" size={16} /> Nächste Termine</a>
+        <a class="btn btn--ghost rec" href={`mailto:${settings.email}`}><Icon name="rec" size={14} /> Mixtape buchen</a>
       </div>
       <div class="hero-visual">
-        <div class="disc disc--cyan"></div>
-        <div class="disc disc--orange"></div>
-        <Reel class="reel-a" size="16%" color="var(--ink)" hub="var(--paper)" speed="12s" />
+        <CassetteOutline class="bg-tape" />
+        <Reel class="reel-cyan" size="58%" color="var(--cyan)" hub="#fff" speed="14s" />
+        <Reel class="reel-orange" size="34%" color="var(--orange)" hub="#fff" speed="10s" />
         <Image
           src={groupCutout}
           alt="Die Mitglieder von Mixtape sitzen lachend auf dem Boden, mit Kassetten und einem großen M"
@@ -59,109 +57,118 @@ const headline = esc(home.data.tagline ?? '')
     </div>
   </section>
 
+  <div class="stripe-band" aria-hidden="true"></div>
   <Marquee items={['A cappella', ...settings.genres, 'Live']} />
 
-  <section id="termine" class="section events">
+  <section id="termine" class="section">
     <div class="wrap">
-      <header class="section-head" data-reveal>
-        <span class="label">Side A</span>
+      <header class="section-head">
+        <span class="side-tag">Side A</span>
         <h2>Termine</h2>
       </header>
-      {
-        next ? (
-          <NextEvent event={next} />
-        ) : (
-          <p class="empty" data-reveal>
-            Gerade stehen keine öffentlichen Termine an. Abonniert unseren <a href={url('/newsletter/')}>Newsletter</a>, dann erfahrt ihr als
-            Erste vom nächsten Auftritt.
-          </p>
-        )
-      }
+      {next && <NextEvent event={next} />}
       {
         later.length > 0 && (
-          <ol class="tracklist" data-reveal>
+          <ol class="tracklist">
             {later.map((e, i) => (
               <EventTrack event={e} index={i + 2} />
             ))}
           </ol>
         )
       }
-      <a class="more" href={url('/events/')} data-reveal>
-        Alle Termine{past.length > 0 && ` & ${past.length} bisherige Auftritte`} <Icon name="arrow" size={18} />
+      <a class="more" href={url('/events/')}>
+        Alle Termine · <TapeCounter value={past.length} /> bisherige Auftritte <Icon name="arrow" size={18} />
       </a>
+      <div class="subscribe-row"><CalendarSubscribe compact /></div>
     </div>
   </section>
 
   <section class="section welcome">
     <div class="wrap welcome-grid">
-      <div class="jcard" data-reveal>
-        <div class="jcard-spine mono">Mixtape · Vol. 1</div>
+      <div class="jcard">
+        <div class="jcard-spine">
+          <span class="marker">Mixtape</span>
+          <span class="mono">Vol. 01</span>
+        </div>
         <div class="jcard-body">
+          <div class="jcard-head mono"><span>Liner Notes</span><span>Side A + B</span></div>
           <h2>{home.data.heading}</h2>
           <div class="prose"><Welcome /></div>
         </div>
       </div>
-      <figure class="polaroid" data-reveal>
-        <Image
-          src={livePhoto}
-          alt="Mixtape singt live auf einer Treppe in der Nürnberger Altstadt"
-          widths={[480, 800, 1200]}
-          sizes="(max-width: 900px) 100vw, 40vw"
-        />
-        <figcaption>Live beim Bardentreffen 2026</figcaption>
+      <figure class="polaroid">
+        <span class="washi w1" aria-hidden="true"></span>
+        <span class="washi w2" aria-hidden="true"></span>
+        <Image src={livePhoto} alt="Mixtape singt live auf einer Treppe in der Nürnberger Altstadt" widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 40vw" />
+        <figcaption class="marker">Live beim Bardentreffen 2026</figcaption>
       </figure>
     </div>
   </section>
 
   <section class="section band">
     <div class="wrap">
-      <header class="section-head" data-reveal>
-        <span class="label">Side B</span>
+      <header class="section-head">
+        <span class="side-tag">Side B</span>
         <h2>Wir sind Mixtape</h2>
         <p class="intro">echt, nahbar, berührend und mitreißend.</p>
       </header>
-      <ul class="members">
+      <ul class="inserts">
         {
           members.map((m, i) => (
-            <li data-reveal style={`--i:${i}`}>
+            <li style={`--i:${i}`}>
               <a href={url(`/wer-wir-sind/#${m.id}`)}>
-                <span class="photo">
-                  <Image src={m.data.photo} alt={m.data.photoAlt ?? m.data.name} widths={[320, 640]} sizes="(max-width: 640px) 50vw, 25vw" />
+                <span class="spine">
+                  <span class="marker">{m.data.name}</span>
+                  <span class="mono">{String(i + 1).padStart(2, '0')}</span>
                 </span>
-                <span class="name">{m.data.name}</span>
-                <span class="voice mono">{m.data.voice}</span>
+                <span class="front">
+                  <span class="front-top mono">
+                    <span>Mixtape</span>
+                    <span>Track {String(i + 1).padStart(2, '0')}</span>
+                  </span>
+                  <span class="photo">
+                    <Image src={m.data.photo} alt={m.data.photoAlt ?? m.data.name} widths={[320, 640]} sizes="(max-width: 640px) 45vw, 22vw" />
+                  </span>
+                  <span class="front-bottom">
+                    <span class="name marker">{m.data.name}</span>
+                    <span class="voice mono">{m.data.voice}</span>
+                  </span>
+                </span>
               </a>
             </li>
           ))
         }
       </ul>
-      <div class="center" data-reveal>
-        <a class="btn" href={url('/wer-wir-sind/')}>Mehr über uns <Icon name="arrow" size={18} /></a>
+      <div class="center">
+        <a class="btn" href={url('/wer-wir-sind/')}><Icon name="play" size={16} /> Mehr über uns</a>
       </div>
     </div>
   </section>
 
-  <section class="booking grain">
+  <section class="booking">
     <div class="wrap booking-grid">
-      <div data-reveal>
-        <span class="label label--light">Booking</span>
+      <div>
+        <span class="rec-light mono"><span class="dot"></span> Rec</span>
         <h2>Mixtape live bei euch</h2>
-      </div>
-      <div data-reveal>
         <p class="booking-text">{home.data.bookingText}</p>
         <a class="btn" href={`mailto:${settings.email}`}><Icon name="mail" size={18} /> {home.data.bookingButton}</a>
       </div>
+      <div class="booking-tape">
+        <Cassette shell="#ffffff" label="var(--ink)" side="B" type="C90">
+          <span class="light-writing">Eure Feier</span>
+        </Cassette>
+      </div>
     </div>
-    <Reel class="booking-reel" size={360} color="#ffffff22" hub="var(--orange)" speed="20s" />
   </section>
 
-  <section class="section nl-section">
-    <div class="wrap nl-grid">
-      <div data-reveal>
+  <section class="section deck">
+    <div class="wrap deck-grid">
+      <div>
         <span class="label">Newsletter</span>
         <h2>Nichts verpassen</h2>
+        <VuMeter />
       </div>
-      <div data-reveal>
+      <div>
         <div class="nl-intro"><NewsletterIntro /></div>
         <NewsletterForm />
         <p class="insta">
@@ -175,45 +182,58 @@ const headline = esc(home.data.tagline ?? '')
 <style>
   .section {
     padding-block: clamp(4rem, 9vw, 7.5rem);
+    overflow-x: clip;
   }
   .section-head {
     margin-bottom: clamp(2rem, 4vw, 3rem);
   }
   .section-head h2 {
     font-size: clamp(3.5rem, 2rem + 7vw, 8rem);
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
   }
   .intro {
     font-size: 1.25rem;
-    color: var(--ink-soft);
     margin-top: 0.75rem;
   }
 
   /* Hero */
   .hero {
-    padding-block: clamp(2rem, 5vw, 4rem) 0;
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(1.5rem, 4vw, 3.5rem) clamp(2.5rem, 5vw, 4rem);
   }
   .hero-grid {
     display: grid;
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-    align-items: center;
-    gap: 2rem;
+    grid-template-rows: 1fr auto auto auto auto 1fr;
+    grid-template-areas:
+      '. visual'
+      'label visual'
+      'title visual'
+      'lead visual'
+      'cta visual'
+      '. visual';
+    column-gap: 2rem;
   }
-  h1 {
+  .hero-label {
+    grid-area: label;
+  }
+  .hero-title {
+    grid-area: title;
     font-size: clamp(3.4rem, 1.6rem + 5.6vw, 7rem);
     line-height: 0.88;
     margin: 1.25rem 0 1.5rem;
   }
-  h1 :global(.nw) {
+  .hero-title :global(.nw) {
     white-space: nowrap;
   }
-  h1 :global(mark) {
+  .hero-title :global(mark) {
     background: none;
     color: var(--orange);
     position: relative;
     white-space: nowrap;
   }
-  h1 :global(mark)::after {
+  .hero-title :global(mark)::after {
     content: '';
     position: absolute;
     left: -0.04em;
@@ -223,58 +243,54 @@ const headline = esc(home.data.tagline ?? '')
     background: var(--cyan);
     border-radius: 99px;
     z-index: -1;
-    transform-origin: left;
-    animation: underline 0.9s 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  }
-  @keyframes underline {
-    from {
-      transform: scaleX(0);
-    }
   }
   .lead {
+    grid-area: lead;
     font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
     max-width: 30ch;
     color: var(--ink-soft);
   }
   .hero-cta {
+    grid-area: cta;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
+  }
+  .rec :global(svg) {
+    color: var(--orange);
   }
   .hero-visual {
+    grid-area: visual;
     position: relative;
-    aspect-ratio: 1491 / 1000;
+    aspect-ratio: 1491 / 1060;
+    align-self: center;
   }
-  .disc {
+  .hero-visual :global(.bg-tape) {
     position: absolute;
-    border-radius: 50%;
+    left: -6%;
+    top: 2%;
+    width: 112%;
+    height: auto;
+    color: #16171b14;
+    transform: rotate(-6deg);
   }
-  .disc--cyan {
-    width: 70%;
-    aspect-ratio: 1;
-    background: var(--cyan);
-    right: 2%;
+  .hero-visual :global(.reel-cyan) {
+    position: absolute;
+    right: 6%;
     top: 0;
   }
-  .disc--orange {
-    width: 36%;
-    aspect-ratio: 1;
-    background: var(--orange);
+  .hero-visual :global(.reel-orange) {
+    position: absolute;
     left: 4%;
-    top: 8%;
-  }
-  .hero-visual :global(.reel-a) {
-    position: absolute;
-    left: 30%;
-    top: 0;
+    top: 14%;
   }
   .cutout {
     position: absolute;
     inset: auto 0 0 0;
     width: 100%;
     height: auto;
-    filter: drop-shadow(0 18px 24px #14171c33);
+    filter: drop-shadow(0 18px 24px #16171b33);
   }
 
   /* Events */
@@ -285,19 +301,18 @@ const headline = esc(home.data.tagline ?? '')
   }
   .more {
     display: inline-flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     margin-top: 2rem;
     font-weight: 700;
     text-decoration: none;
-    border-bottom: 3px solid var(--orange);
-    padding-bottom: 0.2rem;
   }
   .more:hover {
     color: var(--orange-deep);
   }
-  .empty {
-    font-size: 1.2rem;
+  .subscribe-row {
+    margin-top: 1.25rem;
   }
 
   /* Welcome */
@@ -312,54 +327,92 @@ const headline = esc(home.data.tagline ?? '')
   }
   .jcard {
     display: grid;
-    grid-template-columns: 3rem 1fr;
-    background: var(--card);
+    grid-template-columns: 3.4rem 1fr;
+    background: #fff;
     border: 2px solid var(--ink);
-    border-radius: var(--radius);
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 8px 8px 0 var(--ink);
+    box-shadow: 10px 10px 0 var(--ink);
   }
   .jcard-spine {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: var(--cyan);
+    justify-content: space-between;
+    padding-block: 1.25rem;
+    background: linear-gradient(to left, var(--orange) 0 33%, var(--cyan) 33% 66%, var(--ink) 66%);
+    color: #fff;
     border-left: 2px solid var(--ink);
-    font-weight: 700;
-    letter-spacing: 0.2em;
+  }
+  .jcard-spine .marker {
+    font-size: 1.4rem;
+  }
+  .jcard-spine .mono {
+    font-size: 0.7rem;
   }
   .jcard-body {
     padding: clamp(1.5rem, 4vw, 3rem);
-    background: repeating-linear-gradient(to bottom, transparent 0 2.3rem, #19bfd11a 2.3rem calc(2.3rem + 1px));
+  }
+  .jcard-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 0.6rem;
+    margin-bottom: 1.5rem;
   }
   .jcard h2 {
     font-size: clamp(2.2rem, 1.5rem + 2.5vw, 3.5rem);
     margin-bottom: 1.25rem;
   }
   .polaroid {
+    position: relative;
     margin: 0;
     background: #fff;
     padding: 0.9rem 0.9rem 0;
-    box-shadow: var(--shadow);
+    box-shadow: 0 18px 40px -16px #16171b55;
     transform: rotate(2.5deg);
-    border-radius: 4px;
   }
   .polaroid img {
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
   }
-  figcaption {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    padding: 0.9rem 0.25rem 1.1rem;
+  .polaroid figcaption {
+    font-size: 1.15rem;
+    padding: 0.8rem 0.25rem 1rem;
     text-align: center;
   }
+  .washi {
+    position: absolute;
+    z-index: 1;
+    width: 110px;
+    height: 30px;
+    opacity: 0.85;
+    background: repeating-linear-gradient(45deg, var(--cyan) 0 8px, #6fd9e5 8px 16px);
+  }
+  .w1 {
+    top: -12px;
+    left: -24px;
+    transform: rotate(-30deg);
+  }
+  .w2 {
+    top: -12px;
+    right: -24px;
+    transform: rotate(28deg);
+    background: repeating-linear-gradient(45deg, var(--orange) 0 8px, #ff8c62 8px 16px);
+  }
 
-  /* Band */
-  .members {
+  /* Band: J-card inserts */
+  .band {
+    background: var(--cyan);
+  }
+  .band .side-tag {
+    color: var(--ink);
+  }
+  .inserts {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -367,102 +420,172 @@ const headline = esc(home.data.tagline ?? '')
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: clamp(1rem, 2.5vw, 2rem);
   }
-  .members li {
-    transition-delay: calc(var(--i) * 80ms);
+  .inserts li:nth-child(odd) a {
+    transform: rotate(-1.5deg);
   }
-  .members a {
+  .inserts li:nth-child(even) a {
+    transform: rotate(1.5deg) translateY(12px);
+  }
+  .inserts a {
+    display: grid;
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+    text-decoration: none;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 6px 6px 0 var(--ink);
+    transition:
+      transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.3s;
+  }
+  .inserts a:hover {
+    transform: translateY(-10px) rotate(0deg);
+    box-shadow: 10px 14px 0 var(--ink);
+  }
+  .spine {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 0.9rem;
+    background: var(--ink);
+    color: #fff;
+  }
+  .spine .marker {
+    font-size: 1.25rem;
+  }
+  .spine .mono {
+    font-size: 0.65rem;
+    color: var(--cyan);
+  }
+  .inserts li:nth-child(even) .spine .mono {
+    color: var(--orange);
+  }
+  .front {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    text-decoration: none;
+    min-width: 0;
+  }
+  .front-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6rem;
+    padding: 0.5rem 0.7rem;
+    border-bottom: 2px solid var(--ink);
   }
   .photo {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 50%;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
-    border: 3px solid var(--ink);
-    background: var(--cyan);
-    margin-bottom: 1rem;
-    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .members li:nth-child(even) .photo {
-    background: var(--orange);
+    border-bottom: 2px solid var(--ink);
   }
   .photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s;
   }
-  .members a:hover .photo {
-    transform: rotate(-4deg) scale(1.03);
+  .inserts a:hover .photo img {
+    transform: scale(1.05);
+  }
+  .front-bottom {
+    display: grid;
+    padding: 0.6rem 0.7rem 0.8rem;
+    background: linear-gradient(to bottom, transparent 0 calc(100% - 12px), var(--orange) calc(100% - 12px) calc(100% - 6px), var(--cyan) calc(100% - 6px));
   }
   .name {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 2rem;
-    text-transform: uppercase;
-    line-height: 1;
+    font-size: clamp(1.4rem, 1.1rem + 0.8vw, 1.9rem);
+    line-height: 1.1;
   }
   .voice {
-    font-size: 0.72rem;
+    font-size: 0.62rem;
     color: var(--ink-soft);
-    margin-top: 0.35rem;
+    margin-bottom: 0.6rem;
   }
   .center {
     display: flex;
     justify-content: center;
-    margin-top: 3rem;
+    margin-top: 3.5rem;
   }
 
   /* Booking */
   .booking {
-    position: relative;
-    overflow: hidden;
     background: var(--orange);
     color: #fff;
     padding-block: clamp(4rem, 9vw, 7rem);
+    overflow: hidden;
   }
   .booking-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2rem 4rem;
-    align-items: end;
-    position: relative;
-    z-index: 1;
+    align-items: center;
+  }
+  .rec-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--ink);
+    color: #fff;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+  }
+  .dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: #ff2d2d;
+    animation: blink 1.2s steps(2, jump-none) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0.15;
+    }
   }
   .booking h2 {
     font-size: clamp(3.2rem, 2rem + 5vw, 6.5rem);
-    margin-top: 0.75rem;
+    margin: 1rem 0 1.25rem;
     color: var(--ink);
-  }
-  .label--light::before {
-    background: var(--ink);
   }
   .booking-text {
     font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem);
     margin-bottom: 1.75rem;
   }
-  .booking :global(.booking-reel) {
-    position: absolute;
-    right: -90px;
-    top: -110px;
+  .booking-tape {
+    transform: rotate(8deg);
+  }
+  .light-writing {
+    color: #fff;
+  }
+  .booking-tape :global(.writing) {
+    border-color: #ffffff55;
+  }
+  .booking-tape :global(.side) {
+    background: var(--orange);
+  }
+  .booking-tape :global(.type) {
+    color: #ffffffaa;
   }
 
-  /* Newsletter */
-  .nl-grid {
+  /* Newsletter as tape deck */
+  .deck {
+    background: #23252c;
+    color: #f1f1f1;
+  }
+  .deck-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2rem 4rem;
     align-items: center;
   }
-  .nl-section h2 {
+  .deck h2 {
     font-size: clamp(3rem, 2rem + 4vw, 5.5rem);
-    margin-top: 0.75rem;
+    margin: 0.75rem 0 1.5rem;
   }
   .nl-intro {
-    color: var(--ink-soft);
+    color: #c9ccd2;
     margin-bottom: 1.5rem;
   }
   .insta {
@@ -478,18 +601,32 @@ const headline = esc(home.data.tagline ?? '')
   }
 
   @media (max-width: 900px) {
-    .hero-grid,
+    /* Phone: picture and headline first, then the buttons */
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto;
+      grid-template-areas: 'label' 'visual' 'title' 'lead' 'cta';
+    }
+    .hero-visual {
+      margin-top: 1rem;
+    }
+    .hero-title {
+      margin-top: 0.5rem;
+    }
     .welcome-grid,
     .booking-grid,
-    .nl-grid {
+    .deck-grid {
       grid-template-columns: minmax(0, 1fr);
     }
-    .members {
+    .inserts {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .polaroid {
       max-width: 480px;
       margin-inline: auto;
+    }
+    .booking-tape {
+      max-width: 420px;
     }
   }
 </style>

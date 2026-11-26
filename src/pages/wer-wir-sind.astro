@@ -4,6 +4,9 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
+import Reel from '../components/Reel.astro';
+import CassetteOutline from '../components/CassetteOutline.astro';
+import { url } from '../lib/url';
 import groupCutout from '../assets/brand/group-cutout-wide.png';
 import groupPhoto from '../assets/photos/group-cassette.jpg';
 
@@ -22,7 +25,9 @@ const former = withContent.filter(({ m }) => m.data.former);
     <div class="wrap intro-grid">
       <div class="prose lead" data-reveal><Content /></div>
       <div class="cutout-wrap" data-reveal>
-        <div class="disc"></div>
+        <CassetteOutline class="bg-tape" />
+        <Reel class="reel-cyan" size="54%" color="var(--cyan)" hub="#fff" speed="14s" />
+        <Reel class="reel-orange" size="30%" color="var(--orange)" hub="#fff" speed="10s" />
         <Image src={groupCutout} alt="Mixtape: Andreas, Carina, Ellen und Tobias sitzen lachend auf dem Boden" widths={[640, 960, 1491]} sizes="(max-width: 900px) 100vw, 50vw" />
       </div>
     </div>
@@ -30,12 +35,17 @@ const former = withContent.filter(({ m }) => m.data.former);
 
   <section class="members-section">
     <div class="wrap">
+      <span class="side-tag" data-reveal>Side A</span>
       <h2 class="sub" data-reveal>Die Stimmen</h2>
       <div class="members">
         {
           current.map(({ m, Content }, i) => (
-            <article class="member" id={m.id} data-reveal>
-              <div class:list={['photo', i % 2 ? 'orange' : 'cyan']}>
+            <article class:list={['member', i % 2 ? 'orange' : 'cyan']} id={m.id} data-reveal>
+              <div class="spine" aria-hidden="true">
+                <span class="marker">{m.data.name}</span>
+                <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+              </div>
+              <div class="photo">
                 <Image src={m.data.photo} alt={m.data.photoAlt ?? m.data.name} widths={[400, 700]} sizes="(max-width: 760px) 100vw, 320px" />
               </div>
               <div class="text">
@@ -73,6 +83,7 @@ const former = withContent.filter(({ m }) => m.data.former);
     former.length > 0 && (
       <section class="former-section">
         <div class="wrap">
+          <span class="side-tag" data-reveal>Side B</span>
           <h2 class="sub" data-reveal>Ehemalige Mitglieder</h2>
           <div class="former">
             {former.map(({ m, Content }) => (
@@ -99,7 +110,10 @@ const former = withContent.filter(({ m }) => m.data.former);
   <section class="cta-section">
     <div class="wrap cta">
       <h2>Live erleben</h2>
-      <a class="btn btn--orange" href={`${import.meta.env.BASE_URL}events/`}>Zu den Terminen <Icon name="arrow" size={18} /></a>
+      <div class="cta-buttons">
+        <a class="btn btn--orange" href={url('/events/')}><Icon name="play" size={16} /> Zu den Terminen</a>
+        <a class="btn btn--cyan" href="mailto:info@mixtape-vocal.de"><Icon name="rec" size={12} /> Mixtape buchen</a>
+      </div>
     </div>
   </section>
 </Base>
@@ -107,10 +121,11 @@ const former = withContent.filter(({ m }) => m.data.former);
 <style>
   .sub {
     font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem);
-    margin-bottom: clamp(2rem, 4vw, 3rem);
+    margin: 0.25rem 0 clamp(2rem, 4vw, 3rem);
   }
   .intro-section {
     padding-block: clamp(3rem, 7vw, 6rem);
+    overflow-x: clip;
   }
   .intro-grid {
     display: grid;
@@ -132,20 +147,32 @@ const former = withContent.filter(({ m }) => m.data.former);
   }
   .cutout-wrap {
     position: relative;
+    padding-top: 22%;
   }
-  .disc {
+  .cutout-wrap :global(.bg-tape) {
     position: absolute;
-    width: 72%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: var(--cyan);
-    left: 14%;
-    top: -18%;
+    left: -6%;
+    top: -4%;
+    width: 112%;
+    height: auto;
+    color: #16171b14;
+    transform: rotate(-6deg);
+  }
+  .cutout-wrap :global(.reel-cyan) {
+    position: absolute;
+    right: 6%;
+    top: 0;
+  }
+  .cutout-wrap :global(.reel-orange) {
+    position: absolute;
+    left: 4%;
+    top: 14%;
   }
   .cutout-wrap img {
     position: relative;
     width: 100%;
     height: auto;
+    filter: drop-shadow(0 18px 24px #16171b33);
   }
 
   .members-section {
@@ -158,37 +185,55 @@ const former = withContent.filter(({ m }) => m.data.former);
   }
   .member {
     display: grid;
-    grid-template-columns: 300px minmax(0, 1fr);
-    gap: clamp(1.5rem, 4vw, 3rem);
-    align-items: start;
+    grid-template-columns: 3rem 280px minmax(0, 1fr);
+    align-items: stretch;
     background: var(--card);
     border: 2px solid var(--ink);
-    border-radius: var(--radius);
-    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 8px 8px 0 var(--ink);
     scroll-margin-top: 100px;
   }
-  .member:nth-child(even) {
-    grid-template-columns: minmax(0, 1fr) 300px;
+  .spine {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 1.25rem;
+    background: var(--ink);
+    color: #fff;
+    border-left: 2px solid var(--ink);
   }
-  .member:nth-child(even) .photo {
-    order: 2;
+  .spine .marker {
+    font-size: 1.5rem;
+  }
+  .spine .mono {
+    font-size: 0.7rem;
+    color: var(--cyan);
+  }
+  .member.orange .spine .mono {
+    color: var(--orange);
   }
   .photo {
-    border-radius: calc(var(--radius) - 6px);
     overflow: hidden;
-    aspect-ratio: 1;
-    border: 2px solid var(--ink);
+    border-right: 2px solid var(--ink);
+    position: relative;
   }
-  .photo.cyan {
-    box-shadow: 6px 6px 0 var(--cyan);
-  }
-  .photo.orange {
-    box-shadow: 6px 6px 0 var(--orange);
+  .photo::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 12px;
+    background: linear-gradient(to bottom, var(--orange) 0 50%, var(--cyan) 50%);
   }
   .photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  .text {
+    padding: clamp(1.25rem, 3vw, 2.25rem);
   }
   .side {
     color: var(--orange);
@@ -196,8 +241,12 @@ const former = withContent.filter(({ m }) => m.data.former);
     font-size: 0.75rem;
   }
   h3 {
-    font-size: clamp(2.6rem, 2rem + 2vw, 3.6rem);
-    margin: 0.25rem 0 0.2rem;
+    font-family: var(--font-marker);
+    font-weight: 400;
+    text-transform: none;
+    font-size: clamp(2.2rem, 1.8rem + 1.6vw, 3rem);
+    line-height: 1.1;
+    margin: 0.25rem 0 0.4rem;
   }
   .voice {
     display: inline-block;
@@ -227,16 +276,16 @@ const former = withContent.filter(({ m }) => m.data.former);
   .lineup li::before {
     content: '';
     position: absolute;
-    left: -11px;
-    top: 0.3rem;
-    width: 19px;
-    height: 19px;
+    left: -14px;
+    top: 0.2rem;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
-    background: var(--cyan);
+    background: radial-gradient(circle, #fff 0 4px, var(--cyan) 4.5px);
     border: 3px solid var(--ink);
   }
   .lineup li:last-child::before {
-    background: var(--orange);
+    background: radial-gradient(circle, #fff 0 4px, var(--orange) 4.5px);
   }
   .period {
     font-family: var(--font-display);
@@ -255,16 +304,19 @@ const former = withContent.filter(({ m }) => m.data.former);
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
   }
-  .member.small,
-  .member.small:nth-child(even) {
+  .member.small {
     grid-template-columns: 140px minmax(0, 1fr);
+    box-shadow: 6px 6px 0 var(--ink);
   }
-  .member.small:nth-child(even) .photo {
-    order: 0;
+  .member.small .photo::after {
+    display: none;
   }
   .member.small h3 {
-    font-size: 2.2rem;
+    font-size: 2rem;
     margin-bottom: 0.75rem;
+  }
+  .member.small .photo {
+    aspect-ratio: 1;
   }
   .member.small .prose {
     font-size: 0.95rem;
@@ -292,6 +344,11 @@ const former = withContent.filter(({ m }) => m.data.former);
     background: var(--ink);
     color: var(--paper);
   }
+  .cta-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
   .cta {
     display: flex;
     flex-wrap: wrap;
@@ -314,19 +371,23 @@ const former = withContent.filter(({ m }) => m.data.former);
     }
   }
   @media (max-width: 760px) {
-    .member,
-    .member:nth-child(even) {
-      grid-template-columns: minmax(0, 1fr);
+    .member {
+      grid-template-columns: 2.6rem minmax(0, 1fr);
     }
-    .member:nth-child(even) .photo {
-      order: 0;
+    .spine {
+      grid-row: span 2;
     }
     .photo {
-      max-width: 320px;
+      aspect-ratio: 1;
+      border-right: 0;
+      border-bottom: 2px solid var(--ink);
     }
-    .member.small,
-    .member.small:nth-child(even) {
+    .member.small {
       grid-template-columns: 96px minmax(0, 1fr);
+    }
+    .member.small .photo {
+      border-bottom: 0;
+      border-right: 2px solid var(--ink);
     }
   }
 </style>

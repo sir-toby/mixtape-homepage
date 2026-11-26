@@ -6,38 +6,38 @@ import { url } from '../../lib/url';
 
 const variants = [
   {
-    key: 'A',
-    name: 'Kassette',
+    key: 'A2',
+    name: 'Kassette 2 (aktiv)',
     href: url('/'),
-    text: 'Hell, verspielt, Retro trifft modern: Creme-Papier, die Logofarben Cyan und Orange, kondensierte Plakatschrift, Termine als Tracklist und Side A / Side B. Das ist die aktuell ausgebaute Variante – alle Unterseiten nutzen sie.',
-    tone: 'var(--cyan)',
+    text: 'Die aktuelle Hauptseite: Weiß, Logofarben Cyan und Orange, drehende Spulen, Kassette als dezente Form im Hintergrund, Mitglieder als Kassetten-Cover, Play/Rec-Knöpfe, Bandzählwerk, REC-Lampe und VU-Meter. Alle Unterseiten nutzen diesen Stil.',
+    tone: 'var(--ink)',
   },
   {
-    key: 'A2',
-    name: 'Kassette 2',
-    href: url('/prototypen/a2/'),
-    text: 'Wie A, aber Weiß statt Creme und mehr Kassetten-Stil: drehende Spulen wie im Logo, Kassette als dezente Form im Hintergrund, Mitglieder als Kassetten-Cover, Retro-Streifen, Play/Rec-Knöpfe, Bandzählwerk, REC-Lampe und VU-Meter.',
-    tone: 'var(--ink)',
+    key: 'A',
+    name: 'Kassette',
+    href: url('/prototypen/a/'),
+    text: 'Der erste Entwurf: cremefarbenes Papier, Termine als Tracklist und Side A / Side B.',
+    tone: 'var(--cyan)',
   },
   {
     key: 'B',
     name: 'Bühne',
     href: url('/prototypen/b/'),
-    text: 'Dunkel wie ein Konzertsaal, farbige Lichtkegel, Glas-Karten und breite Schrift. Wirkt wie ein Festival-Lineup und lässt die Fotos leuchten.',
-    tone: 'var(--ink)',
+    text: 'Dunkel wie ein Konzertsaal, farbige Lichtkegel, Glas-Karten und breite Schrift.',
+    tone: 'var(--ink-soft)',
   },
   {
     key: 'C',
     name: 'Editorial',
     href: url('/prototypen/c/'),
-    text: 'Ruhig und hochwertig wie ein Magazin: großes Live-Foto, Serifenschrift, viel Weißraum, Farbe nur als Akzent.',
+    text: 'Ruhig und hochwertig wie ein Magazin: großes Live-Foto, Serifenschrift, viel Weißraum.',
     tone: 'var(--orange)',
   },
 ];
 ---
 
 <Base title="Design-Prototypen" noindex>
-  <PageHero label="Work in progress" title="Prototypen" intro="Drei Richtungen für die neue Mixtape-Seite. Alle nutzen dieselben Inhalte aus dem CMS." />
+  <PageHero label="Work in progress" title="Prototypen" intro="Die Entwürfe für die neue Mixtape-Seite. Alle nutzen dieselben Inhalte aus dem CMS." />
   <section class="wrap list">
     {
       variants.map((v) => (

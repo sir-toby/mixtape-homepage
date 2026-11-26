@@ -3,7 +3,7 @@
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Icon from './Icon.astro';
-import Reel from './Reel.astro';
+import Cassette from './Cassette.astro';
 import { url } from '../lib/url';
 import { formatDate, formatWeekdayLong, formatTime, mapsUrl, type Event } from '../lib/events';
 
@@ -23,8 +23,7 @@ const maps = mapsUrl(event);
         <Image src={data.image} alt={data.imageAlt ?? ''} widths={[480, 800, 1100]} sizes="(max-width: 860px) 100vw, 45vw" />
       ) : (
         <div class="placeholder">
-          <Reel size="38%" color="var(--cyan)" hub="var(--ink)" />
-          <Reel size="38%" color="var(--orange)" hub="var(--ink)" speed="7s" />
+          <Cassette class="tape">{data.title}</Cassette>
         </div>
       )
     }
@@ -88,10 +87,14 @@ const maps = mapsUrl(event);
   .placeholder {
     aspect-ratio: 1;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8%;
+    display: grid;
+    place-items: center;
+    padding: 10%;
+    background: var(--cyan);
+  }
+  .placeholder :global(.tape) {
+    width: 100%;
+    transform: rotate(-6deg);
   }
   .info {
     padding: clamp(1.5rem, 4vw, 3rem);
@@ -152,6 +155,10 @@ const maps = mapsUrl(event);
     .media img {
       aspect-ratio: 4 / 3;
       object-position: top;
+    }
+    .placeholder {
+      aspect-ratio: 16 / 9;
+      padding: 6% 20%;
     }
   }
 </style>

@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import Reel from '../../components/Reel.astro';
+import Cassette from '../../components/Cassette.astro';
 import { getEvents, formatDate, formatWeekdayLong, formatTime, mapsUrl, isoDay, type Event } from '../../lib/events';
 import { url } from '../../lib/url';
 import settings from '../../data/settings.json';
@@ -45,7 +45,7 @@ const jsonLd = data.private
     <a class="back" href={url('/events/')}><Icon name="arrow" size={18} class="flip" /> Alle Termine</a>
     <div class="grid">
       <div class="info">
-        <span class="label">{isPast ? 'Bisheriger Auftritt' : data.private ? 'Geschlossene Veranstaltung' : 'Live'}</span>
+        <span class="side-tag">{isPast ? 'Bisheriger Auftritt' : data.private ? 'Geschlossene Veranstaltung' : 'Live'}</span>
         <h1>{data.title}</h1>
         <ul class="facts">
           <li><Icon name="calendar" /> {formatWeekdayLong(data.date)}, {formatDate(data.date)}</li>
@@ -104,8 +104,7 @@ const jsonLd = data.private
             <Image src={data.image} alt={data.imageAlt ?? ''} widths={[480, 800, 1200]} sizes="(max-width: 860px) 100vw, 45vw" loading="eager" />
           ) : (
             <div class="placeholder" aria-hidden="true">
-              <Reel size="34%" color="var(--cyan)" hub="var(--ink)" />
-              <Reel size="34%" color="var(--orange)" hub="var(--ink)" speed="7s" />
+              <Cassette class="tape" side={isPast ? 'B' : 'A'}>{data.title}</Cassette>
             </div>
           )
         }
@@ -197,13 +196,17 @@ const jsonLd = data.private
   }
   .placeholder {
     aspect-ratio: 1;
-    background: var(--ink);
+    background: var(--cyan);
+    border: 2px solid var(--ink);
     border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8%;
-    box-shadow: 8px 8px 0 var(--orange);
+    display: grid;
+    place-items: center;
+    padding: 10%;
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .placeholder :global(.tape) {
+    width: 100%;
+    transform: rotate(-6deg);
   }
   @media (max-width: 860px) {
     .grid {
@@ -214,7 +217,8 @@ const jsonLd = data.private
       order: -1;
     }
     .placeholder {
-      aspect-ratio: 16 / 7;
+      aspect-ratio: 16 / 9;
+      padding: 6% 18%;
     }
   }
 </style>

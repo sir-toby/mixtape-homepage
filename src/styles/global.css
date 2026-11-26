@@ -6,16 +6,18 @@
   --cyan-deep: #0b8b9a;
   --orange: #ff5d25;
   --orange-deep: #d9430f;
-  --ink: #14171c;
+  --ink: #16171b;
   --ink-soft: #3d434d;
-  --paper: #f7f2e8;
-  --paper-2: #efe7d7;
-  --card: #fffdf8;
-  --line: #14171c1f;
+  --paper: #ffffff;
+  --paper-2: #eef2f5;
+  --card: #ffffff;
+  --line: #16171b1a;
+  --tape: #4a3426;
 
   --font-display: 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif;
   --font-body: 'Outfit Variable', system-ui, sans-serif;
   --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-marker: 'Permanent Marker', var(--font-display);
 
   --radius: 18px;
   --radius-sm: 10px;
@@ -26,13 +28,13 @@
   color-scheme: light;
 }
 
-/* Theme A2: clean white instead of cream, cool grey for alternating sections */
-:root[data-theme='a2'] {
-  --paper: #ffffff;
-  --paper-2: #eef2f5;
-  --card: #ffffff;
-  --line: #16171b1a;
-  --ink: #16171b;
+/* First design draft (prototype A): warm cream paper */
+:root[data-theme='cream'] {
+  --paper: #f7f2e8;
+  --paper-2: #efe7d7;
+  --card: #fffdf8;
+  --line: #14171c1f;
+  --ink: #14171c;
 }
 
 *,
@@ -181,6 +183,38 @@ p {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+/* Cassette details: handwriting, "Side A" tags, label stripes */
+.marker {
+  font-family: var(--font-marker);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.side-tag {
+  display: inline-block;
+  font-family: var(--font-marker);
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem);
+  line-height: 1.2;
+  color: var(--orange);
+  transform: rotate(-4deg);
+  transform-origin: left;
+}
+
+.stripe-band {
+  height: 30px;
+  background: linear-gradient(to bottom, var(--orange) 0 33.3%, var(--cyan) 33.3% 66.6%, var(--ink) 66.6%);
+}
+
+.btn .i-rec {
+  color: var(--orange);
+}
+
+.btn--orange .i-rec,
+.btn--ghost:hover .i-rec {
+  color: inherit;
 }
 
 /* Long-form text from Markdown */

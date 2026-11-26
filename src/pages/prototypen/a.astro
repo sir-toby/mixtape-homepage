@@ -1,0 +1,496 @@
+---
+// Design-Prototyp A (erster Entwurf, cremefarben). Die Hauptseite nutzt inzwischen A2.
+import { Image } from 'astro:assets';
+import { getCollection, getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Reel from '../../components/Reel.astro';
+import Marquee from '../../components/Marquee.astro';
+import Icon from '../../components/Icon.astro';
+import NextEvent from '../../components/NextEvent.astro';
+import EventTrack from '../../components/EventTrack.astro';
+import NewsletterForm from '../../components/NewsletterForm.astro';
+import groupCutout from '../../assets/brand/group-cutout-wide.png';
+import livePhoto from '../../assets/photos/bardentreffen-2026-stage.jpg';
+import settings from '../../data/settings.json';
+import { getEvents } from '../../lib/events';
+import { url } from '../../lib/url';
+
+const home = (await getEntry('pages', 'home'))!;
+const newsletter = (await getEntry('pages', 'newsletter'))!;
+const { Content: Welcome } = await render(home);
+const { Content: NewsletterIntro } = await render(newsletter);
+
+const { upcoming, past } = await getEvents();
+const [next, ...later] = upcoming;
+const members = (await getCollection('members', ({ data }) => !data.former)).sort((a, b) => a.data.order - b.data.order);
+
+// Hero headline: keep "A-cappella-" together and give "Spaß" the highlighter treatment.
+const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const headline = esc(home.data.tagline ?? '')
+  .replace(/(A-cappella-)/, '<span class="nw">$1</span>')
+  .replace('Spaß', '<mark>Spaß</mark>');
+---
+
+<Base title="Prototyp A – Kassette" description={home.data.description} theme="cream" noindex>
+  <section class="hero grain">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="label">Vocalband · A cappella</span>
+        <h1 set:html={headline} />
+        <p class="lead">Seit 2022 singen wir gemeinsam Pop, Jazz, Rock und Singer/Songwriter.</p>
+        <div class="hero-cta">
+          <a class="btn btn--orange" href="#termine">Nächste Termine <Icon name="arrow" size={18} /></a>
+          <a class="btn btn--ghost" href={`mailto:${settings.email}`}>Mixtape buchen</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="disc disc--cyan"></div>
+        <div class="disc disc--orange"></div>
+        <Reel class="reel-a" size="16%" color="var(--ink)" hub="var(--paper)" speed="12s" />
+        <Image
+          src={groupCutout}
+          alt="Die Mitglieder von Mixtape sitzen lachend auf dem Boden, mit Kassetten und einem großen M"
+          widths={[640, 960, 1491]}
+          sizes="(max-width: 900px) 100vw, 55vw"
+          loading="eager"
+          fetchpriority="high"
+          class="cutout"
+        />
+      </div>
+    </div>
+  </section>
+
+  <Marquee items={['A cappella', ...settings.genres, 'Live']} />
+
+  <section id="termine" class="section events">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="label">Side A</span>
+        <h2>Termine</h2>
+      </header>
+      {
+        next ? (
+          <NextEvent event={next} />
+        ) : (
+          <p class="empty" data-reveal>
+            Gerade stehen keine öffentlichen Termine an. Abonniert unseren <a href={url('/newsletter/')}>Newsletter</a>, dann erfahrt ihr als
+            Erste vom nächsten Auftritt.
+          </p>
+        )
+      }
+      {
+        later.length > 0 && (
+          <ol class="tracklist" data-reveal>
+            {later.map((e, i) => (
+              <EventTrack event={e} index={i + 2} />
+            ))}
+          </ol>
+        )
+      }
+      <a class="more" href={url('/events/')} data-reveal>
+        Alle Termine{past.length > 0 && ` & ${past.length} bisherige Auftritte`} <Icon name="arrow" size={18} />
+      </a>
+    </div>
+  </section>
+
+  <section class="section welcome">
+    <div class="wrap welcome-grid">
+      <div class="jcard" data-reveal>
+        <div class="jcard-spine mono">Mixtape · Vol. 1</div>
+        <div class="jcard-body">
+          <h2>{home.data.heading}</h2>
+          <div class="prose"><Welcome /></div>
+        </div>
+      </div>
+      <figure class="polaroid" data-reveal>
+        <Image
+          src={livePhoto}
+          alt="Mixtape singt live auf einer Treppe in der Nürnberger Altstadt"
+          widths={[480, 800, 1200]}
+          sizes="(max-width: 900px) 100vw, 40vw"
+        />
+        <figcaption>Live beim Bardentreffen 2026</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <span class="label">Side B</span>
+        <h2>Wir sind Mixtape</h2>
+        <p class="intro">echt, nahbar, berührend und mitreißend.</p>
+      </header>
+      <ul class="members">
+        {
+          members.map((m, i) => (
+            <li data-reveal style={`--i:${i}`}>
+              <a href={url(`/wer-wir-sind/#${m.id}`)}>
+                <span class="photo">
+                  <Image src={m.data.photo} alt={m.data.photoAlt ?? m.data.name} widths={[320, 640]} sizes="(max-width: 640px) 50vw, 25vw" />
+                </span>
+                <span class="name">{m.data.name}</span>
+                <span class="voice mono">{m.data.voice}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="center" data-reveal>
+        <a class="btn" href={url('/wer-wir-sind/')}>Mehr über uns <Icon name="arrow" size={18} /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="booking grain">
+    <div class="wrap booking-grid">
+      <div data-reveal>
+        <span class="label label--light">Booking</span>
+        <h2>Mixtape live bei euch</h2>
+      </div>
+      <div data-reveal>
+        <p class="booking-text">{home.data.bookingText}</p>
+        <a class="btn" href={`mailto:${settings.email}`}><Icon name="mail" size={18} /> {home.data.bookingButton}</a>
+      </div>
+    </div>
+    <Reel class="booking-reel" size={360} color="#ffffff22" hub="var(--orange)" speed="20s" />
+  </section>
+
+  <section class="section nl-section">
+    <div class="wrap nl-grid">
+      <div data-reveal>
+        <span class="label">Newsletter</span>
+        <h2>Nichts verpassen</h2>
+      </div>
+      <div data-reveal>
+        <div class="nl-intro"><NewsletterIntro /></div>
+        <NewsletterForm />
+        <p class="insta">
+          Oder folgt uns auf <a href={settings.instagram} target="_blank" rel="noopener"><Icon name="instagram" size={18} /> Instagram</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .section {
+    padding-block: clamp(4rem, 9vw, 7.5rem);
+  }
+  .section-head {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .section-head h2 {
+    font-size: clamp(3.5rem, 2rem + 7vw, 8rem);
+    margin-top: 0.5rem;
+  }
+  .intro {
+    font-size: 1.25rem;
+    color: var(--ink-soft);
+    margin-top: 0.75rem;
+  }
+
+  /* Hero */
+  .hero {
+    padding-block: clamp(2rem, 5vw, 4rem) 0;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: 2rem;
+  }
+  h1 {
+    font-size: clamp(3.4rem, 1.6rem + 5.6vw, 7rem);
+    line-height: 0.88;
+    margin: 1.25rem 0 1.5rem;
+  }
+  h1 :global(.nw) {
+    white-space: nowrap;
+  }
+  h1 :global(mark) {
+    background: none;
+    color: var(--orange);
+    position: relative;
+    white-space: nowrap;
+  }
+  h1 :global(mark)::after {
+    content: '';
+    position: absolute;
+    left: -0.04em;
+    right: -0.04em;
+    bottom: 0.06em;
+    height: 0.14em;
+    background: var(--cyan);
+    border-radius: 99px;
+    z-index: -1;
+    transform-origin: left;
+    animation: underline 0.9s 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes underline {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  .lead {
+    font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+    max-width: 30ch;
+    color: var(--ink-soft);
+  }
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  .hero-visual {
+    position: relative;
+    aspect-ratio: 1491 / 1000;
+  }
+  .disc {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .disc--cyan {
+    width: 70%;
+    aspect-ratio: 1;
+    background: var(--cyan);
+    right: 2%;
+    top: 0;
+  }
+  .disc--orange {
+    width: 36%;
+    aspect-ratio: 1;
+    background: var(--orange);
+    left: 4%;
+    top: 8%;
+  }
+  .hero-visual :global(.reel-a) {
+    position: absolute;
+    left: 30%;
+    top: 0;
+  }
+  .cutout {
+    position: absolute;
+    inset: auto 0 0 0;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 18px 24px #14171c33);
+  }
+
+  /* Events */
+  .tracklist {
+    list-style: none;
+    padding: 0;
+    margin: 2.5rem 0 0;
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 3px solid var(--orange);
+    padding-bottom: 0.2rem;
+  }
+  .more:hover {
+    color: var(--orange-deep);
+  }
+  .empty {
+    font-size: 1.2rem;
+  }
+
+  /* Welcome */
+  .welcome {
+    background: var(--paper-2);
+  }
+  .welcome-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .jcard {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .jcard-spine {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cyan);
+    border-left: 2px solid var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+  }
+  .jcard-body {
+    padding: clamp(1.5rem, 4vw, 3rem);
+    background: repeating-linear-gradient(to bottom, transparent 0 2.3rem, #19bfd11a 2.3rem calc(2.3rem + 1px));
+  }
+  .jcard h2 {
+    font-size: clamp(2.2rem, 1.5rem + 2.5vw, 3.5rem);
+    margin-bottom: 1.25rem;
+  }
+  .polaroid {
+    margin: 0;
+    background: #fff;
+    padding: 0.9rem 0.9rem 0;
+    box-shadow: var(--shadow);
+    transform: rotate(2.5deg);
+    border-radius: 4px;
+  }
+  .polaroid img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.9rem 0.25rem 1.1rem;
+    text-align: center;
+  }
+
+  /* Band */
+  .members {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 2rem);
+  }
+  .members li {
+    transition-delay: calc(var(--i) * 80ms);
+  }
+  .members a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+  }
+  .photo {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--ink);
+    background: var(--cyan);
+    margin-bottom: 1rem;
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .members li:nth-child(even) .photo {
+    background: var(--orange);
+  }
+  .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .members a:hover .photo {
+    transform: rotate(-4deg) scale(1.03);
+  }
+  .name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2rem;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .voice {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    margin-top: 0.35rem;
+  }
+  .center {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+  }
+
+  /* Booking */
+  .booking {
+    position: relative;
+    overflow: hidden;
+    background: var(--orange);
+    color: #fff;
+    padding-block: clamp(4rem, 9vw, 7rem);
+  }
+  .booking-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 4rem;
+    align-items: end;
+    position: relative;
+    z-index: 1;
+  }
+  .booking h2 {
+    font-size: clamp(3.2rem, 2rem + 5vw, 6.5rem);
+    margin-top: 0.75rem;
+    color: var(--ink);
+  }
+  .label--light::before {
+    background: var(--ink);
+  }
+  .booking-text {
+    font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem);
+    margin-bottom: 1.75rem;
+  }
+  .booking :global(.booking-reel) {
+    position: absolute;
+    right: -90px;
+    top: -110px;
+  }
+
+  /* Newsletter */
+  .nl-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 4rem;
+    align-items: center;
+  }
+  .nl-section h2 {
+    font-size: clamp(3rem, 2rem + 4vw, 5.5rem);
+    margin-top: 0.75rem;
+  }
+  .nl-intro {
+    color: var(--ink-soft);
+    margin-bottom: 1.5rem;
+  }
+  .insta {
+    margin-top: 1.25rem;
+    font-size: 0.95rem;
+  }
+  .insta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 700;
+    vertical-align: bottom;
+  }
+
+  @media (max-width: 900px) {
+    .hero-grid,
+    .welcome-grid,
+    .booking-grid,
+    .nl-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .members {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .polaroid {
+      max-width: 480px;
+      margin-inline: auto;
+    }
+  }
+</style>

@@ -1,4 +1,6 @@
 ---
+import CassetteOutline from './CassetteOutline.astro';
+
 interface Props {
   label: string;
   title: string;
@@ -8,19 +10,31 @@ interface Props {
 const { label, title, intro, tone = 'paper' } = Astro.props;
 ---
 
-<section class:list={['page-hero grain', tone]}>
-  <div class="wrap">
-    <span class="label">{label}</span>
+<section class:list={['page-hero', tone]}>
+  <CassetteOutline class="shape" />
+  <div class="wrap inner">
+    <span class="side-tag">{label}</span>
     <h1>{title}</h1>
     {intro && <p class="intro">{intro}</p>}
     <slot />
   </div>
 </section>
+<div class="stripe-band" aria-hidden="true"></div>
 
 <style>
   .page-hero {
-    padding-block: clamp(3rem, 7vw, 6rem) clamp(2rem, 5vw, 4rem);
-    border-bottom: 2px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(3rem, 7vw, 6rem) clamp(2.5rem, 5vw, 4rem);
+  }
+  .page-hero :global(.shape) {
+    position: absolute;
+    right: -6%;
+    top: 50%;
+    width: min(620px, 70vw);
+    height: auto;
+    color: #16171b14;
+    transform: translateY(-50%) rotate(-8deg);
   }
   .cyan {
     background: var(--cyan);
@@ -28,15 +42,23 @@ const { label, title, intro, tone = 'paper' } = Astro.props;
   .orange {
     background: var(--orange);
   }
-  .orange .label::before {
-    background: var(--ink);
+  .cyan :global(.shape),
+  .orange :global(.shape) {
+    color: #16171b1f;
   }
-  .cyan .label::before {
-    background: var(--orange);
+  .cyan .side-tag,
+  .orange .side-tag {
+    color: var(--ink);
+  }
+  .orange .intro {
+    color: #fff;
+  }
+  .inner {
+    position: relative;
   }
   h1 {
     font-size: clamp(3.5rem, 1.5rem + 8vw, 9rem);
-    margin-top: 1.25rem;
+    margin-top: 0.75rem;
     padding-top: 0.08em;
     overflow-wrap: anywhere;
   }

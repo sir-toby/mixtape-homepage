@@ -13,7 +13,7 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 | `src/content.config.ts` | Schemas der Collections. Neue Felder hier **und** in `public/admin/config.yml` eintragen. |
 | `src/assets/` | Bilder, die Astro optimiert (Marke, Fotos, Event-Plakate, Porträts). |
 | `public/admin/` | Sveltia CMS (Konfiguration in `config.yml`). |
-| `src/pages/prototypen/` | Design-Prototypen A2, B und C (noindex, nicht in der Sitemap). A2 nutzt das Theme `data-theme="a2"` (Tokens in `global.css`) und die Komponente `Cassette.astro`. |
+| `src/pages/prototypen/` | Frühere Design-Entwürfe A (creme, `theme="cream"`), B und C (noindex, nicht in der Sitemap). Die Hauptseite ist Entwurf A2. |
 | `.github/workflows/deploy.yml` | Build und Deploy, Ziel über die Repo-Variable `DEPLOY_TARGET`. |
 
 ## Regeln
@@ -23,7 +23,8 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 - Markdown läuft über **Sätteri** (Astro-7-Standard), nicht remark/rehype. Plugins als Sätteri-HAST/MDAST-Plugins schreiben.
 - `/kalender.ics` ist ein abonnierbarer Kalender mit allen Auftritten (`src/pages/kalender.ics.ts`), einzelne Termine gibt es unter `/events/<slug>.ics`.
 - Termine haben kein Zeitzonen-Problem: `date` ist ein Kalendertag, `start`/`end` sind Strings `HH:MM`. Vergangen/kommend entscheidet der Build (täglicher Cron-Build).
-- Farben/Schriften als CSS-Variablen in `src/styles/global.css`. Markenfarben aus dem Logo: Cyan `#19BFD1`, Orange `#FF5D25`.
+- Farben/Schriften als CSS-Variablen in `src/styles/global.css`. Markenfarben aus dem Logo: Cyan `#19BFD1`, Orange `#FF5D25`, Grund Weiß (bewusst kein Creme).
+- Kassetten-Stil statt Kassetten-Bild: `side-tag` („Side A/B“, Marker-Schrift), `stripe-band`, Spulen (`Reel`), `CassetteOutline` als blasse Hintergrundform, J-Card-Optik mit Rücken, ▶/●-Icons auf Buttons. Die ganze Kassette (`Cassette.astro`) nur sparsam einsetzen, nicht groß im Seitenkopf (Wunsch der Band).
 
 ## Entwickeln
 

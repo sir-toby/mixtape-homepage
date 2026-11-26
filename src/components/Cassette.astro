@@ -167,9 +167,11 @@ const teeth = [0, 60, 120, 180, 240, 300];
     line-height: 1.25;
     color: var(--ink);
     text-align: center;
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
   .type {
     flex: none;

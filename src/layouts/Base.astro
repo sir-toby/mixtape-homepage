@@ -3,6 +3,7 @@ import '@fontsource-variable/big-shoulders-display';
 import '@fontsource-variable/outfit';
 import '@fontsource/space-mono/400.css';
 import '@fontsource/space-mono/700.css';
+import '@fontsource/permanent-marker';
 import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
@@ -17,8 +18,8 @@ interface Props {
   /** Bare page without site header/footer (used by the design prototypes). */
   bare?: boolean;
   noindex?: boolean;
-  /** Colour theme, see :root[data-theme] in global.css. */
-  theme?: 'a2';
+  /** Colour theme, see :root[data-theme] in global.css. Only the old prototype A uses one. */
+  theme?: 'cream';
 }
 
 const { title, description = 'Mixtape – A-cappella-Musik, die Spaß macht!', image = ogDefault, bare = false, theme } = Astro.props;
@@ -41,7 +42,7 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href={icon32.src} type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href={icon180.src} />
-    <meta name="theme-color" content={theme ? '#ffffff' : '#f7f2e8'} />
+    <meta name="theme-color" content={theme === 'cream' ? '#f7f2e8' : '#ffffff'} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_DE" />
     <meta property="og:site_name" content="Mixtape" />
