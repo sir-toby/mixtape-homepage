@@ -4,8 +4,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Icon from '../components/Icon.astro';
-import Reel from '../components/Reel.astro';
-import CassetteOutline from '../components/CassetteOutline.astro';
+import TapeReels from '../components/TapeReels.astro';
 import { url } from '../lib/url';
 import groupCutout from '../assets/brand/group-cutout-wide.png';
 import groupPhoto from '../assets/photos/group-cassette.jpg';
@@ -25,9 +24,7 @@ const former = withContent.filter(({ m }) => m.data.former);
     <div class="wrap intro-grid">
       <div class="prose lead" data-reveal><Content /></div>
       <div class="cutout-wrap" data-reveal>
-        <CassetteOutline class="bg-tape" />
-        <Reel class="reel-cyan" size="54%" color="var(--cyan)" hub="#fff" speed="14s" />
-        <Reel class="reel-orange" size="30%" color="var(--orange)" hub="#fff" speed="10s" />
+        <TapeReels class="bg-tape" />
         <Image src={groupCutout} alt="Mixtape: Andreas, Carina, Ellen und Tobias sitzen lachend auf dem Boden" widths={[640, 960, 1491]} sizes="(max-width: 900px) 100vw, 50vw" />
       </div>
     </div>
@@ -151,22 +148,9 @@ const former = withContent.filter(({ m }) => m.data.former);
   }
   .cutout-wrap :global(.bg-tape) {
     position: absolute;
-    left: -6%;
-    top: -4%;
-    width: 112%;
-    height: auto;
-    color: #16171b14;
-    transform: rotate(-6deg);
-  }
-  .cutout-wrap :global(.reel-cyan) {
-    position: absolute;
-    right: 6%;
+    left: -4%;
     top: 0;
-  }
-  .cutout-wrap :global(.reel-orange) {
-    position: absolute;
-    left: 4%;
-    top: 14%;
+    width: 108%;
   }
   .cutout-wrap img {
     position: relative;
@@ -305,7 +289,7 @@ const former = withContent.filter(({ m }) => m.data.former);
     gap: 1.5rem;
   }
   .member.small {
-    grid-template-columns: 140px minmax(0, 1fr);
+    grid-template-columns: 220px minmax(0, 1fr);
     box-shadow: 6px 6px 0 var(--ink);
   }
   .member.small .photo::after {
@@ -318,7 +302,7 @@ const former = withContent.filter(({ m }) => m.data.former);
   /* Photo fills its column at the card's height instead of growing to a square wider than the column */
   .member.small .photo {
     aspect-ratio: auto;
-    min-height: 140px;
+    min-height: 220px;
   }
   .member.small .photo img {
     object-position: center 25%;
@@ -388,11 +372,11 @@ const former = withContent.filter(({ m }) => m.data.former);
       border-bottom: 2px solid var(--ink);
     }
     .member.small {
-      grid-template-columns: 96px minmax(0, 1fr);
+      grid-template-columns: 120px minmax(0, 1fr);
     }
     .member.small .photo {
       aspect-ratio: auto;
-      min-height: 96px;
+      min-height: 120px;
       border-bottom: 0;
       border-right: 2px solid var(--ink);
     }

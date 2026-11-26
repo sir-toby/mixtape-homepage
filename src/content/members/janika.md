@@ -1,7 +1,7 @@
 ---
 name: Janika
 voice: Tenor bis Sopran
-photo: ../../assets/members/janika.jpg
+photo: /src/assets/members/janika.jpg
 photoAlt: Janika hält sich eine Kassette vors Auge
 former: true
 order: 5

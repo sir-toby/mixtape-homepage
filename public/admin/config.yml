@@ -35,10 +35,9 @@ collections:
     format: frontmatter
     create: true
     slug: '{{title}}'
-    # Relative to the collection folder, so the front matter gets a path that
-    # Astro's image() helper resolves and optimises (src/assets/events/…).
-    media_folder: ../../assets/events
-    public_folder: ../../assets/events
+    # Path from the project root: Astro's image() helper resolves it and optimises the image.
+    media_folder: /src/assets/events
+    public_folder: /src/assets/events
     summary: "{{date | date('DD.MM.YYYY')}} · {{title}}"
     sortable_fields:
       fields: [date, title]
@@ -90,8 +89,8 @@ collections:
     create: true
     slug: '{{name}}'
     identifier_field: name
-    media_folder: ../../assets/members
-    public_folder: ../../assets/members
+    media_folder: /src/assets/members
+    public_folder: /src/assets/members
     summary: '{{name}} · {{voice}}'
     sortable_fields: [order, name]
     fields:

@@ -21,6 +21,7 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 - **Vor jeder Änderung `git pull --rebase`.** Das CMS committet direkt auf `main`, das Repo ändert sich also auch ohne lokale Arbeit.
 - **Texte nicht umschreiben.** Die Inhalte stammen von der alten Seite und gehören der Band. Neue kurze Texte (Überschriften, Hinweise) sind ok, bestehende nur auf Wunsch ändern.
 - **Interne Links immer über `url()`** aus `src/lib/url.ts` bauen, nie hart `/foo/`. Auf GitHub Pages liegt die Seite unter `/mixtape-homepage/`, später unter `/`. In Markdown dürfen Links mit `/` beginnen; `src/lib/satteri-links.mjs` setzt den Basis-Pfad davor.
+- **Bildpfade im Frontmatter ab Projektwurzel** schreiben (`image: /src/assets/events/x.jpg`). Astro löst sie auf, und nur so findet das CMS die Bilder in seiner Medienbibliothek; relative Pfade (`../../assets/…`) sieht es nicht.
 - Markdown läuft über **Sätteri** (Astro-7-Standard), nicht remark/rehype. Plugins als Sätteri-HAST/MDAST-Plugins schreiben.
 - `/kalender.ics` ist ein abonnierbarer Kalender mit allen Auftritten (`src/pages/kalender.ics.ts`), einzelne Termine gibt es unter `/events/<slug>.ics`.
 - Termine haben kein Zeitzonen-Problem: `date` ist ein Kalendertag, `start`/`end` sind Strings `HH:MM`. Vergangen/kommend entscheidet der Build (täglicher Cron-Build).

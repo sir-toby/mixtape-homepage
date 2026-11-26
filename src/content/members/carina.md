@@ -1,7 +1,7 @@
 ---
 name: Carina
 voice: Sopran
-photo: ../../assets/members/carina.jpg
+photo: /src/assets/members/carina.jpg
 photoAlt: Carina hält sich eine Kassette ans Ohr
 website: https://www.carina-poleschinski.de
 order: 2

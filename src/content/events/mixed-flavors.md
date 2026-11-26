@@ -5,7 +5,7 @@ start: "19:30"
 end: "22:00"
 location: "Kirche St. Martha"
 address: "Königstr. 79, Nürnberg"
-image: ../../assets/events/mixed-flavours-2025.jpg
+image: /src/assets/events/mixed-flavours-2025.jpg
 imageAlt: "Plakat „Mixed Flavours – A cappella Konzert“ mit nue-capella, Mixtape, VierVonFünf und JACK B"
 ---
 

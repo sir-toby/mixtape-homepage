@@ -1,0 +1,42 @@
+---
+// Background shape for the hero areas: a faint cassette outline with two equally
+// sized reels in the positions of a real cassette. The parent positions it via `class`.
+import CassetteOutline from './CassetteOutline.astro';
+import Reel from './Reel.astro';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<div class:list={['tape-reels', className]} aria-hidden="true">
+  <CassetteOutline class="outline" />
+  <Reel class="reel left" size="34%" color="var(--cyan)" hub="#fff" speed="12s" />
+  <Reel class="reel right" size="34%" color="var(--orange)" hub="#fff" speed="12s" />
+</div>
+
+<style>
+  .tape-reels {
+    aspect-ratio: 1000 / 640;
+    transform: rotate(-6deg);
+  }
+  .tape-reels :global(.outline) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: #16171b14;
+  }
+  .tape-reels :global(.reel) {
+    position: absolute;
+    top: 47%;
+    translate: -50% -50%;
+  }
+  .tape-reels :global(.left) {
+    left: 31%;
+  }
+  .tape-reels :global(.right) {
+    left: 69%;
+  }
+</style>

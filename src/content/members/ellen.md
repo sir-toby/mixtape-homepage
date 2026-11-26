@@ -1,7 +1,7 @@
 ---
 name: Ellen
 voice: Mezzo
-photo: ../../assets/members/ellen.jpg
+photo: /src/assets/members/ellen.jpg
 photoAlt: Ellen schaut mit großen Augen und offenem Mund
 website: https://ellendenzinger.de
 order: 3

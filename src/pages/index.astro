@@ -3,8 +3,7 @@ import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Cassette from '../components/Cassette.astro';
-import CassetteOutline from '../components/CassetteOutline.astro';
-import Reel from '../components/Reel.astro';
+import TapeReels from '../components/TapeReels.astro';
 import CalendarSubscribe from '../components/CalendarSubscribe.astro';
 import Marquee from '../components/Marquee.astro';
 import Icon from '../components/Icon.astro';
@@ -41,9 +40,7 @@ const headline = esc(home.data.tagline ?? '')
         <a class="btn btn--ghost rec" href={`mailto:${settings.email}`}><Icon name="rec" size={14} /> Mixtape buchen</a>
       </div>
       <div class="hero-visual">
-        <CassetteOutline class="bg-tape" />
-        <Reel class="reel-cyan" size="58%" color="var(--cyan)" hub="#fff" speed="14s" />
-        <Reel class="reel-orange" size="34%" color="var(--orange)" hub="#fff" speed="10s" />
+        <TapeReels class="bg-tape" />
         <Image
           src={groupCutout}
           alt="Die Mitglieder von Mixtape sitzen lachend auf dem Boden, mit Kassetten und einem großen M"
@@ -268,22 +265,9 @@ const headline = esc(home.data.tagline ?? '')
   }
   .hero-visual :global(.bg-tape) {
     position: absolute;
-    left: -6%;
-    top: 2%;
-    width: 112%;
-    height: auto;
-    color: #16171b14;
-    transform: rotate(-6deg);
-  }
-  .hero-visual :global(.reel-cyan) {
-    position: absolute;
-    right: 6%;
+    left: -4%;
     top: 0;
-  }
-  .hero-visual :global(.reel-orange) {
-    position: absolute;
-    left: 4%;
-    top: 14%;
+    width: 108%;
   }
   .cutout {
     position: absolute;

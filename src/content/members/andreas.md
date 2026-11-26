@@ -1,7 +1,7 @@
 ---
 name: Andreas
 voice: Tenor & Bariton
-photo: ../../assets/members/andreas.jpg
+photo: /src/assets/members/andreas.jpg
 photoAlt: Andreas hält sich eine Kassette ans Ohr und schaut skeptisch
 order: 1
 ---

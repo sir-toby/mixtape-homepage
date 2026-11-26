@@ -1,7 +1,7 @@
 ---
 name: Tobias
 voice: Tenor & Beatbox
-photo: ../../assets/members/tobias.jpg
+photo: /src/assets/members/tobias.jpg
 photoAlt: Tobias beißt grinsend in eine Kassette
 former: false
 order: 4

@@ -5,7 +5,7 @@ start: "15:00"
 end: "16:00"
 location: "Köpfleinsberg"
 address: "Nürnberg"
-image: ../../assets/events/bardentreffen-2026.jpg
+image: /src/assets/events/bardentreffen-2026.jpg
 imageAlt: "Mixtape in bunten Outfits auf einer Straße in Nürnberg"
 ---
 

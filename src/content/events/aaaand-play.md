@@ -5,7 +5,7 @@ start: "19:00"
 end: "21:00"
 location: "Theater Tausendkunst"
 address: "Welkenbacher Kirchweg 11, 91074 Herzogenaurach"
-image: ../../assets/events/aaaand-play-2025.jpg
+image: /src/assets/events/aaaand-play-2025.jpg
 imageAlt: "Grafik „Aaand… Play!“ im Stil eines Musik-Players mit Play-Taste"
 ---
 

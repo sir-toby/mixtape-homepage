@@ -1,7 +1,7 @@
 ---
 name: Sören
 voice: Bass
-photo: ../../assets/members/soeren.jpg
+photo: /src/assets/members/soeren.jpg
 photoAlt: Sören hält eine Kassette in der Hand
 former: true
 order: 6

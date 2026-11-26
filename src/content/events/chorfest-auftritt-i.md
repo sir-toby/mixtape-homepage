@@ -5,7 +5,7 @@ start: "10:20"
 end: "10:40"
 location: "Orpheum Nürnberg"
 address: "Johannisstraße 32A, 90419 Nürnberg"
-image: ../../assets/events/chorfest-2025.jpg
+image: /src/assets/events/chorfest-2025.jpg
 imageAlt: "Mixtape schaut staunend auf eine Kassette"
 ---
 
