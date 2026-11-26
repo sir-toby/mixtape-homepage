@@ -35,8 +35,8 @@
   --pattern-pos: 0 0;
 }
 
-/* Test (temporary): the same texture on the cyan and orange blocks, ?flaechen=muster */
-:root[data-flaechen="muster"] .tinted {
+/* The same texture on the cyan and orange blocks (not on page headers) */
+.tinted {
   background-image: var(--pattern);
 }
 

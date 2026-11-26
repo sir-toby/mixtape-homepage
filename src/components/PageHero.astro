@@ -1,5 +1,6 @@
 ---
 import CassetteOutline from './CassetteOutline.astro';
+import { hyphenate } from '../lib/hyphenate';
 
 interface Props {
   label: string;
@@ -10,11 +11,11 @@ interface Props {
 const { label, title, intro, tone = 'paper' } = Astro.props;
 ---
 
-<section class:list={['page-hero', tone, { tinted: tone !== 'paper' }]}>
+<section class:list={['page-hero', tone]}>
   <CassetteOutline class="shape" />
   <div class="wrap inner">
     <span class="side-tag">{label}</span>
-    <h1>{title}</h1>
+    <h1>{hyphenate(title)}</h1>
     {intro && <p class="intro">{intro}</p>}
     <slot />
   </div>
@@ -24,6 +25,8 @@ const { label, title, intro, tone = 'paper' } = Astro.props;
 <style>
   .page-hero {
     position: relative;
+    /* Page headers stay plain, without the background texture */
+    background: var(--paper);
     overflow: hidden;
     padding-block: clamp(3rem, 7vw, 6rem) clamp(2.5rem, 5vw, 4rem);
   }
@@ -60,7 +63,8 @@ const { label, title, intro, tone = 'paper' } = Astro.props;
     font-size: clamp(3.5rem, 1.5rem + 8vw, 9rem);
     margin-top: 0.75rem;
     padding-top: 0.08em;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    hyphens: manual;
   }
   .intro {
     font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);

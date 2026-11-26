@@ -8,7 +8,6 @@ import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import BgSwitcher from '../components/BgSwitcher.astro';
 import favicon from '../assets/brand/favicon.png';
 import ogDefault from '../assets/photos/bardentreffen-2026-stage.jpg';
 
@@ -57,13 +56,6 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
     <slot name="head" />
     <script is:inline>
       document.documentElement.classList.add('js');
-      // Test (temporary): texture on the coloured blocks, ?flaechen=muster|glatt, remembered while browsing
-      try {
-        const pick = new URLSearchParams(location.search).get('flaechen');
-        if (pick === 'muster' || pick === 'glatt') localStorage.setItem('mixtape-flaechen', pick);
-        const f = localStorage.getItem('mixtape-flaechen');
-        if (f) document.documentElement.dataset.flaechen = f;
-      } catch {}
     </script>
   </head>
   <body class:list={[{ bare }]}>
@@ -73,7 +65,6 @@ const icon180 = await getImage({ src: favicon, width: 180, format: 'png' });
       <slot />
     </main>
     {!bare && <Footer />}
-    <BgSwitcher />
     <script>
       const io = new IntersectionObserver(
         (entries) =>
