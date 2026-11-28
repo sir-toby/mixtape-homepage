@@ -32,6 +32,31 @@ Website der A-cappella-Band **Mixtape** (Nachfolger der WordPress-Seite mixtape-
 - **Dark Mode** über `data-mode="dark"` auf `<html>` (Systemeinstellung, Umschalter im Header, gespeichert in `localStorage`). Farben nur über Variablen: `--ink` (Text), `--edge` (Ränder/Versatzschatten von Karten), `--dark` (Flächen, die immer dunkel bleiben: Footer, Laufband, Kassettenrücken), `--card`, `--deck`. Cyan/orange Blöcke bekommen die Klasse `on-bright` (dunkle Schrift, weiße Karten in beiden Modi). Keine festen `#fff`/`#16171b` für Flächen einbauen.
 - Kassetten-Stil statt Kassetten-Bild: `side-tag` (kleines Marker-Label über Seitenköpfen), `hand-heading` (Zwischenüberschriften in Handschrift; kein „Side A/B“ mehr, Wunsch der Band), `stripe-band`, Spulen (`Reel`), `CassetteOutline` als blasse Hintergrundform, J-Card-Optik mit Rücken, ▶/●-Icons auf Buttons. Die ganze Kassette (`Cassette.astro`) nur sparsam einsetzen, nicht groß im Seitenkopf (Wunsch der Band).
 
+## Gestaltung im Detail (mit der Band abgestimmt)
+
+- **Startseite:** Kopf mit Bandfoto vor zwei gleich großen Spulen im Fenster einer blassen Kassetten-Silhouette (`TapeReels.astro`), keine große gezeichnete Kassette. Auf dem Handy zuerst Bild und Slogan, darunter die Buttons. Der nächste Termin erscheint als große Karte, alle weiteren als Zeilen darunter.
+- **Terminzeilen** (`EventTrack.astro`): Wochentag über der Tageszahl, darunter Monat und Jahr, linksbündig und vertikal mittig zum Text. Links ein kleines Vorschaubild (nur ab Tablet-Breite); ohne Bild der Logo-Ausschnitt `logo-mark.svg` (Doppelspule + M-Strich). Keine Tracknummern.
+- **Termindetail:** Label („Live“ / „Bisheriger Auftritt“) über beiden Spalten, Titel und Bild beginnen auf gleicher Höhe. Das Bild wird immer ganz gezeigt, nie beschnitten: Desktop höchstens Fensterhöhe, Handy volle Breite.
+- **Über uns:** aktive Mitglieder als Karten mit Kassettenrücken (Name senkrecht, mit Abstand zum Rand), Ehemalige kleiner mit 220 px breitem Foto. Besetzung als Zeitleiste, Punkte mittig zum Text.
+- **Zwischenüberschriften** in Handschrift (`hand-heading`), normale Schriftfarbe. Kein „Side A/B“.
+- **Favicon** = Logo-Ausschnitt `logo-mark.svg` (`public/favicon.svg`, PNG/ICO daraus gerendert).
+- **Lange Wörter** in Überschriften bekommen weiche Trennstellen über `src/lib/hyphenate.ts` (z. B. „Datenschutz-/erklärung“).
+- **Ausprobiert und verworfen:** cremefarbener Grund (Prototyp A), Hintergrund mit Rasterpunkten und Riffelblech, diagonale Linien im Raster, Muster in den Seitenköpfen, unterschiedlich große Spulen, große Kassette im Seitenkopf.
+
+## Inhalte und Herkunft
+
+- Texte, Termine und Bilder stammen von der WordPress-Seite. Terminbilder waren dort Beitragsbilder (nicht auf der Detailseite sichtbar); gefunden über `/wp-json/oembed/1.0/embed?url=<event-url>` → `thumbnail_url`.
+- Termine pflegt die Band von Hand im CMS. Tickets werden nicht über die Seite verkauft.
+- Die Datenschutzerklärung pflegt die Band selbst. Sie ist unverändert von der alten Seite übernommen und muss vor dem Umzug zu all-inkl auf den neuen Host angepasst werden (Cookies/Consent-Abschnitte passen nicht mehr).
+
+## Offen
+
+- Umzug zu all-inkl (Anleitung im README), danach Kalender-Abo-Link und `site_url` im CMS auf die echte Domain.
+- Kurzbeschreibung oben in `/llms.txt` (`src/pages/llms.txt.ts`) ist neu formuliert („Auftritte vor allem in Nürnberg und Umgebung“) – von der Band gegenlesen lassen.
+- CMS-Login per GitHub-Token; „Sign in with GitHub“ (OAuth-Dienst) vielleicht später.
+- Bild-Upload im CMS ist noch nicht getestet.
+- Ein Inhalts-Konnektor (MCP), über den Bandmitglieder per KI Inhalte ändern, wurde besprochen, aber zurückgestellt: vorerst **nicht** auf dem NAS.
+
 ## Entwickeln
 
 ```

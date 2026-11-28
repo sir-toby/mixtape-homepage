@@ -35,6 +35,8 @@ Node.js ≥ 22.23. Mehr zur Struktur in [AGENTS.md](AGENTS.md).
 | nicht gesetzt / `github-pages` | GitHub Pages unter `/mixtape-homepage/`, mit `noindex` |
 | `all-inkl` | eigene Domain bei all-inkl per FTPS |
 
+GitHub Pages muss unter *Settings → Pages* auf **Source: GitHub Actions** stehen (nicht „Deploy from a branch“), sonst läuft zusätzlich ein Jekyll-Build, der den Rohcode veröffentlichen könnte.
+
 ### Umzug zu all-inkl (später)
 
 1. Bei all-inkl einen FTP-Zugang anlegen, der nur auf den neuen Website-Ordner zeigt.
